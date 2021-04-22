@@ -1,2 +1,5 @@
 .vscode
 build
+CMakeSettings.json
+out
+.vs

@@ -26,7 +26,8 @@ endif()
 
 # Ensure we link with SDL
 find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
 
 # Add main code
 add_executable(proi_auto main.cpp)
-target_link_libraries(proi_auto SDL2::SDL2)
+target_link_libraries(proi_auto ${SDL2_LIBRARIES})

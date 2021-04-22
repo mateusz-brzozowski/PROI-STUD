@@ -1,5 +1,7 @@
-#include <SDL2/SDL.h>
+#define SDL_MAIN_HANDLED
+#include "SDL.h"
 #include <cstdio>
+
 
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
