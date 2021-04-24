@@ -23,7 +23,7 @@ endif()
 
 # Include SDL2
 # On Windows, dependencies should be handled by vcpkg; and you should integrate vcpkg with this CMake project
-# On other systems we expect pkg-config to do the job for us. 
+# On other systems we expect pkg-config to do the job for us.
 if(WIN32)
     find_package(SDL2 CONFIG REQUIRED)
     set(SDL2_LIBRARIES SDL2::SDL2 SDL2::SDL2main)
