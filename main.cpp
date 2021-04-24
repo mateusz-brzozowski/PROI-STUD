@@ -1,5 +1,5 @@
 #define SDL_MAIN_HANDLED
-#include "SDL.h"
+#include <SDL.h>
 #include <cstdio>
 
 
@@ -19,7 +19,7 @@ int main() {
     SDL_Surface* surface = SDL_GetWindowSurface(window);
     SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0x00, 0xff, 0x00));
     SDL_UpdateWindowSurface(window);
-    SDL_Delay(10000);
+    SDL_Delay(2000);
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
