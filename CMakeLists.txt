@@ -34,7 +34,7 @@ else()
 endif()
 
 # Add main code
-add_executable(proi_auto "main.cpp")
+add_executable(proi_auto "main.cpp" "Window.h" "Window.cpp")
 target_link_libraries(proi_auto PRIVATE ${SDL2_LIBRARIES})
 
 # Add tests
