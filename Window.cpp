@@ -34,7 +34,7 @@ void Window::init(const char* title, int width, int height, bool fullscreen)
 	else
 		isRunning = false;
 
-	carTexture = LoadTexture("../../../images/car.bmp", renderer);
+	carTexture = LoadTexture("images/car.bmp", renderer);
 }
 void Window::handleEvents()
 {
@@ -83,6 +83,6 @@ SDL_Texture* Window::LoadTexture(const char* path, SDL_Renderer* renderer)
 	SDL_Surface* tmpSurface = SDL_LoadBMP(path);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
 	SDL_FreeSurface(tmpSurface);
-	
+
 	return texture;
 }

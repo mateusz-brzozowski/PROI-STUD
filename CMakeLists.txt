@@ -33,8 +33,11 @@ else()
     include_directories(${SDL2_INCLUDE_DIRS})
 endif()
 
+# Include images alongside the executable
+configure_file(images/car.bmp images/car.bmp COPYONLY)
+
 # Add main code
-add_executable(proi_auto "main.cpp" "Window.h" "Window.cpp")
+add_executable(proi_auto "main.cpp" "Window.cpp")
 target_link_libraries(proi_auto PRIVATE ${SDL2_LIBRARIES})
 
 # Add tests
