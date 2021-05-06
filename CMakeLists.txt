@@ -37,7 +37,7 @@ endif()
 configure_file(images/car.bmp images/car.bmp COPYONLY)
 
 # Add main code
-add_executable(proi_auto "main.cpp" "Window.cpp")
+add_executable(proi_auto "main.cpp" "Window.cpp" "Map.h" "Map.cpp")
 target_link_libraries(proi_auto PRIVATE ${SDL2_LIBRARIES})
 
 # Add tests

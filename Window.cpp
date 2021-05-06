@@ -1,12 +1,6 @@
 #include "Window.h"
 #include <iostream>
 
-Window::Window()
-{}
-
-Window::~Window()
-{}
-
 void Window::init(const char* title, int width, int height, bool fullscreen)
 {
 	int flags = 0;
@@ -49,6 +43,7 @@ void Window::handleEvents()
 		break;
 	}
 }
+
 void Window::update()
 {
 	cnt++;
@@ -64,6 +59,8 @@ void Window::render()
 	SDL_RenderCopyEx(renderer, carTexture, NULL, &destR, angle, NULL, SDL_FLIP_NONE);
 	SDL_RenderPresent(renderer);
 }
+
+
 void Window::clean()
 {
 	SDL_DestroyRenderer(renderer);
@@ -76,6 +73,11 @@ void Window::clean()
 bool Window::running()
 {
 	return isRunning;
+}
+
+SDL_Renderer* Window::get_renderer()
+{
+	return renderer;
 }
 
 SDL_Texture* Window::LoadTexture(const char* path, SDL_Renderer* renderer)

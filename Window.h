@@ -8,15 +8,12 @@ private:
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	
+
 	SDL_Texture* carTexture;
 	SDL_Rect srcR, destR;
 	double angle = 0.0;
 
 public:
-	Window();
-	~Window();
-
 	void init(const char* title, int width, int height, bool fullscreen);
 
 	void handleEvents();
@@ -25,6 +22,8 @@ public:
 	void clean();
 
 	bool running();
+
+	SDL_Renderer* get_renderer();
 
 	static SDL_Texture* LoadTexture(const char* texture, SDL_Renderer* renderer);
 
