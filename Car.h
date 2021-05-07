@@ -9,7 +9,7 @@ class Car: IMapObject
     SDL_Rect srcRect, destRect;
     SDL_Renderer* renderer;
 public:
-    Car(const char* texture, SDL_Rednerer* ren);
+    Car(const char* texture, SDL_Renderer* ren);
     ~Car();
     void set_map(Map const&);
     void update();
