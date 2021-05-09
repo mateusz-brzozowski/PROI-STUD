@@ -3,13 +3,14 @@
 
 class Car: IMapObject
 {
-    int xpose;
-    int ypose;
+    int xpos;
+    int ypos;
     SDL_Texture* carTexture;
-    SDL_Rect srcRect, destRect;
+    SDL_Rect srcRect{}, destRect{};
     SDL_Renderer* renderer;
+    double angle = 0.0;
 public:
-    Car(const char* texture, SDL_Renderer* ren);
+    Car(const char* texture, SDL_Renderer* ren, int x, int y);
     ~Car();
     void set_map(Map const&);
     void update();
