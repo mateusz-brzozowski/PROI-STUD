@@ -1,21 +1,21 @@
 #pragma once
-#include "IMapObject.h"
+#include <SDL.h>
 
-class Car : IMapObject {
-    int xpos;
-    int ypos;
-    SDL_Texture* carTexture;
-    SDL_Rect srcRect{}, destRect{};
-    SDL_Renderer* renderer;
-    double angle = 0.0;
+#include "IMapObject.h"
+#include "Map.h"
+
+class Car : public IMapObject {
+   private:
+    SDL_Texture* m_texture{NULL};
+    SDL_Rect m_position{0, 0, 0, 0};
+    double m_angle{0.0};
+    int m_count{0};
+    Map* m_map{nullptr};
 
    public:
-    Car(const char* texture, SDL_Renderer* ren, int x, int y);
-    ~Car();
-    void set_map(Map const&);
-    void update();
-    void render();
-    SDL_Texture* get_texture();
-    SDL_Rect* get_texture_position();
-    double get_texture_rotation();
+    void set_map(Map* map) override;
+    void update() override;
+    SDL_Texture* get_texture() override;
+    SDL_Rect* get_texture_position() override;
+    double get_texture_rotation() override;
 };

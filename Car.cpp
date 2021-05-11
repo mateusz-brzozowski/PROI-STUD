@@ -1,47 +1,27 @@
 #include "Car.h"
 
+#include <SDL.h>
 #include <stdlib.h>
 
 #include "Window.h"
 
-Car::Car(const char* texture, SDL_Renderer* ren, int x, int y) {
-    renderer = ren;
-    carTexture = Window::LoadTexture(texture, ren);
-    xpos = x;
-    ypos = y;
-}
-
-void Car::set_map(Map const&) {
-    // to do
-}
+void Car::set_map(Map* map) { m_map = map; }
 
 void Car::update() {
-    xpos += rand() % 1;
-    xpos -= rand() & 1;
-    ypos += rand() % 1;
-    ypos -= rand() & 1;
-    angle++;
-
-    srcRect.h = 18;
-    srcRect.w = 18;
-    srcRect.x = 0;
-    srcRect.y = 0;
-
-    destRect.x = xpos;
-    destRect.y = ypos;
-    destRect.h = srcRect.h * 2;
-    destRect.w = srcRect.w * 2;
+    m_position.x = ++m_count % m_map->get_window().get_width();
+    m_angle = m_count;
 }
 
-void Car::render() {
-    SDL_RenderCopyEx(renderer, carTexture, &srcRect, &destRect, angle, NULL,
-                     SDL_FLIP_NONE);
+SDL_Texture* Car::get_texture() {
+    if (!m_texture && m_map) {
+        m_texture = m_map->get_window().load_texture("images/car.bmp");
+        m_position.h = 18;
+        m_position.w = 18;
+    }
+
+    return m_texture;
 }
 
-SDL_Texture* Car::get_texture() { return carTexture; }
+SDL_Rect* Car::get_texture_position() { return &m_position; }
 
-SDL_Rect* Car::get_texture_position() {
-    // to do
-}
-
-double Car::get_texture_rotation() { return angle; }
+double Car::get_texture_rotation() { return m_angle; }

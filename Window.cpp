@@ -1,74 +1,96 @@
 #include "Window.h"
 
+#include <SDL.h>
+
+#include <cassert>
 #include <iostream>
 
+Window::~Window() { clean(); }
+
 void Window::init(const char* title, int width, int height, bool fullscreen) {
-    int flags = 0;
-    if (fullscreen) flags = SDL_WINDOW_FULLSCREEN;
+    // Only permit one initialization
+    if (m_is_running) return;
+
+    assert(!m_sdl_window);
+    assert(!m_renderer);
 
     if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
-        std::cout << "Initialization...\n";
-        window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED,
-                                  SDL_WINDOWPOS_CENTERED, width, height, flags);
+        std::cerr << "SDL Initialized\n";
 
-        if (window) std::cout << "Window created\n";
+        // Try to create a Window
+        m_sdl_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED,
+                                        SDL_WINDOWPOS_CENTERED, width, height,
+                                        fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
 
-        renderer = SDL_CreateRenderer(window, -1, 0);
-
-        if (renderer) {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            std::cout << "Renderer created\n";
+        if (!m_sdl_window) {
+            std::cerr << "Failed to create window: " << SDL_GetError() << '\n';
+            return;
         }
 
-        isRunning = true;
-    } else
-        isRunning = false;
+        std::cerr << "Window crated\n";
+        m_width = width;
+        m_height = height;
 
-    carTexture = LoadTexture("images/car.bmp", renderer);
+        // Add a renderer to the new window
+        m_renderer = SDL_CreateRenderer(m_sdl_window, -1, 0);
+
+        if (!m_renderer) {
+            std::cerr << "Failed to create renderer: " << SDL_GetError()
+                      << '\n';
+            return;
+        }
+
+        std::cerr << "Renderer created\n";
+        SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
+        m_is_running = true;
+    } else {
+        std::cerr << "Failed to initialize SDL: " << SDL_GetError() << '\n';
+    }
 }
+
+SDL_Texture* Window::load_texture(const char* file) {
+    SDL_Surface* tmp_surf = SDL_LoadBMP("images/car.bmp");
+    if (!tmp_surf) {
+        std::cerr << "Failed to load BMP: " << SDL_GetError() << '\n';
+        m_is_running = false;
+        return NULL;
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, tmp_surf);
+    SDL_FreeSurface(tmp_surf);
+
+    if (!texture) {
+        std::cerr << "Failed to create texture: " << SDL_GetError() << '\n';
+        m_is_running = false;
+    }
+
+    return texture;
+}
+
 void Window::handleEvents() {
-    SDL_Event event;
+    SDL_Event event{};
     SDL_PollEvent(&event);
     switch (event.type) {
         case SDL_QUIT:
-            isRunning = false;
-            break;
-        default:
+            std::cerr << "Quit event registered\n";
+            m_is_running = false;
             break;
     }
 }
 
-void Window::update() {
-    cnt++;
-    destR.h = 18;
-    destR.w = 18;
-    destR.x = cnt;
-    destR.y = 0;
-    angle = cnt;
-}
-void Window::render() {
-    SDL_RenderClear(renderer);
-    SDL_RenderCopyEx(renderer, carTexture, NULL, &destR, angle, NULL,
-                     SDL_FLIP_NONE);
-    SDL_RenderPresent(renderer);
-}
-
 void Window::clean() {
-    SDL_DestroyRenderer(renderer);
-    renderer = NULL;
-    SDL_DestroyWindow(window);
-    window = NULL;
-    SDL_Quit;
-    std::cout << "Window closed\n";
-}
-bool Window::running() { return isRunning; }
+    if (m_renderer) {
+        std::cerr << "Destroying renderer\n";
+        SDL_DestroyRenderer(m_renderer);
+        m_renderer = NULL;
+    }
 
-SDL_Renderer* Window::get_renderer() { return renderer; }
+    if (m_sdl_window) {
+        std::cerr << "Destroying window\n";
+        SDL_DestroyWindow(m_sdl_window);
+        m_sdl_window = NULL;
+    }
 
-SDL_Texture* Window::LoadTexture(const char* path, SDL_Renderer* renderer) {
-    SDL_Surface* tmpSurface = SDL_LoadBMP(path);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
-    SDL_FreeSurface(tmpSurface);
-
-    return texture;
+    std::cerr << "Quitting SDL\n";
+    SDL_Quit();
 }

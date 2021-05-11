@@ -9,11 +9,13 @@ class Map;
  */
 class IMapObject {
    public:
+    virtual ~IMapObject() {}
+
     /**
      * set_map will be called when an object is added to the map,
      * as some object might want to talk with other objects.
      */
-    virtual void set_map(Map const&) = 0;
+    virtual void set_map(Map* map) = 0;
 
     /**
      * update will be called by the map object every frame
