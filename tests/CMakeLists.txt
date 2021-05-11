@@ -10,4 +10,5 @@ endif()
 
 add_executable(proi_auto_tests dummy_test.cpp)
 target_link_libraries(proi_auto_tests PRIVATE ${GTest_LIBRARIES})
+target_link_libraries(proi_auto_tests PRIVATE proi_auto_logic)
 gtest_discover_tests(proi_auto_tests)

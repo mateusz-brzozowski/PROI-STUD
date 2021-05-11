@@ -2,6 +2,17 @@
 cmake_minimum_required(VERSION 3.10)
 project(proi_auto)
 
+# Project settings
+set(SOURCES
+    Car.cpp
+    Map.cpp
+    Window.cpp
+)
+
+set(FILES_TO_COPY
+    images/car.bmp
+)
+
 # Add a definition for debug builds
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     add_compile_definitions(_DEBUG)
@@ -34,11 +45,17 @@ else()
 endif()
 
 # Include images alongside the executable
-configure_file(images/car.bmp images/car.bmp COPYONLY)
+foreach(FILE IN LISTS FILES_TO_COPY)
+    configure_file("${FILE}" "${FILE}" COPYONLY)
+endforeach()
+
+# Add the library with game logic
+add_library(proi_auto_logic ${SOURCES})
 
 # Add main code
-add_executable(proi_auto "main.cpp" "Window.cpp" "Map.h" "Map.cpp" "Car.cpp")
+add_executable(proi_auto main.cpp)
 target_link_libraries(proi_auto PRIVATE ${SDL2_LIBRARIES})
+target_link_libraries(proi_auto PRIVATE proi_auto_logic)
 
 # Add tests
 enable_testing()
