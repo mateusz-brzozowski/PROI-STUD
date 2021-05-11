@@ -9,14 +9,13 @@
 
 class Map {
    private:
-    std::vector<std::unique_ptr<IMapObject>> map;
-    Window window;
-    void draw(const std::unique_ptr<IMapObject>& object);
+    std::vector<std::unique_ptr<IMapObject>> m_objects;
+    Window m_window;
+    void draw(IMapObject* object);
 
    public:
-    Map(const Window& window_);
-    ~Map();
-    void add(std::unique_ptr<IMapObject>& object);
+    Map(const Window& window);
+    void add(std::unique_ptr<IMapObject> object);
     void init();
     void render();
     void update();
