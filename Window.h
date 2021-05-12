@@ -1,10 +1,13 @@
 #pragma once
 #include <SDL.h>
 
+#include <unordered_set>
+
 class Window {
    private:
     SDL_Window* m_sdl_window{NULL};
     SDL_Renderer* m_renderer{NULL};
+    std::unordered_set<SDL_Keycode> m_pressed_keys{};
     int m_width{-1};
     int m_height{-1};
     bool m_is_running{false};
@@ -17,6 +20,10 @@ class Window {
     SDL_Texture* load_texture(const char* file);
     void handleEvents();
     void clean();
+
+    inline bool is_pressed(SDL_Keycode key) {
+        return m_pressed_keys.find(key) != m_pressed_keys.end();
+    }
 
     inline SDL_Renderer* get_renderer() { return m_renderer; }
     inline int get_width() { return m_width; }

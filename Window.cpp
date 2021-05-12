@@ -5,6 +5,10 @@
 #include <cassert>
 #include <iostream>
 
+static bool is_interesting_key(SDL_Keycode k) {
+    return k == SDLK_w || k == SDLK_a || k == SDLK_s || k == SDLK_d;
+}
+
 Window::~Window() { clean(); }
 
 void Window::init(const char* title, int width, int height, bool fullscreen) {
@@ -69,12 +73,22 @@ SDL_Texture* Window::load_texture(const char* file) {
 
 void Window::handleEvents() {
     SDL_Event event{};
-    SDL_PollEvent(&event);
-    switch (event.type) {
-        case SDL_QUIT:
-            std::cerr << "Quit event registered\n";
-            m_is_running = false;
-            break;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_QUIT:
+                std::cerr << "Quit event registered\n";
+                m_is_running = false;
+                break;
+            case SDL_KEYDOWN:
+                if (is_interesting_key(event.key.keysym.sym))
+                    m_pressed_keys.insert(event.key.keysym.sym);
+                break;
+            case SDL_KEYUP:
+                auto key_ptr = m_pressed_keys.find(event.key.keysym.sym);
+                if (key_ptr != m_pressed_keys.end())
+                    m_pressed_keys.erase(key_ptr);
+                break;
+        }
     }
 }
 
