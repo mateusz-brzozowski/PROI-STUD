@@ -33,17 +33,27 @@ else()
     set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 endif()
 
+# Other required compile-time definitions
+add_compile_definitions(
+    _USE_MATH_DEFINES
+    SDL_MAIN_HANDLED
+)
+
 # Include SDL2
 # On Windows, dependencies should be handled by vcpkg; and you should integrate vcpkg with this CMake project
 # On other systems we expect pkg-config to do the job for us.
 if(WIN32)
     find_package(SDL2 CONFIG REQUIRED)
     set(SDL2_LIBRARIES SDL2::SDL2 SDL2::SDL2main)
+
+    find_path(SDL2_INCLUDE_DIRS SDL.h PATH_SUFFIXES SDL2)
+    set(SDL2_INCLUDE_DIRS "${SDL2_INCLUDE_DIRS}/SDL2")
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(SDL2 REQUIRED sdl2)
-    include_directories(${SDL2_INCLUDE_DIRS})
 endif()
+
+include_directories(${SDL2_INCLUDE_DIRS})
 
 # Include images alongside the executable
 foreach(FILE IN LISTS FILES_TO_COPY)
