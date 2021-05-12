@@ -3,11 +3,14 @@
 
 #include "IMapObject.h"
 #include "Map.h"
+#include "Tools.h"
 
 class Car : public IMapObject {
    private:
     SDL_Texture* m_texture{NULL};
-    SDL_Rect m_position{0, 0, 0, 0};
+    SDL_Rect m_texture_position{0, 0, 0, 0};
+
+    Vector2D m_position{0.0, 0.0};
     double m_angle{0.0};
     int m_count{0};
     Map* m_map{nullptr};

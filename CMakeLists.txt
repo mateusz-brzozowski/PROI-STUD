@@ -7,6 +7,7 @@ set(SOURCES
     Car.cpp
     Map.cpp
     Window.cpp
+    Tools.cpp
 )
 
 set(FILES_TO_COPY
