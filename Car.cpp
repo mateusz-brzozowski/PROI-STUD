@@ -18,12 +18,12 @@ void Car::update() {
     m_angle -= m_map->get_window().is_pressed(SDLK_a) ? .1 : 0.0;
 
     // Then move the car in the direction pointed by angle
-    double distance = (m_map->get_window().is_pressed(SDLK_s) ? 5.0 : 0.0) -
-                      (m_map->get_window().is_pressed(SDLK_w) ? 5.0 : 0.0);
+    double distance = (m_map->get_window().is_pressed(SDLK_w) ? 5.0 : 0.0) -
+                      (m_map->get_window().is_pressed(SDLK_s) ? 5.0 : 0.0);
 
     std::cerr << "Moving car by: " << distance << '\n';
 
-    Vector2D move_vec = rotate_vector({0, distance}, m_angle);
+    Vector2D move_vec = rotate_vector({distance, 0}, m_angle);
 
     m_position.x = m_position.x + move_vec.x;
     m_position.y = m_position.y + move_vec.y;
