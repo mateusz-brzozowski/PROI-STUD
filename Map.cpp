@@ -4,13 +4,10 @@
 
 #include <memory>
 
-void Map::draw(IMapObject* object) {
-    SDL_RenderCopyEx(m_window.get_renderer(), object->get_texture(), NULL,
-                     object->get_texture_position(),
-                     object->get_texture_rotation(), NULL, SDL_FLIP_NONE);
+void Map::init() {
+    m_window.init();
+    add_view(std::move(m_window.create_mapview()));
 }
-
-void Map::init() { m_window.init(); }
 
 void Map::loop() {
     uint32_t frame_time = 1000 / 60;
@@ -33,9 +30,11 @@ void Map::add(std::unique_ptr<IMapObject> object) {
 }
 
 void Map::render() {
-    SDL_RenderClear(m_window.get_renderer());
-    for (auto const& obj : m_objects) draw(obj.get());
-    SDL_RenderPresent(m_window.get_renderer());
+    for (auto const& view : m_views) {
+        view->before_render();
+        for (auto const& obj : m_objects) view->render(obj.get());
+        view->after_render();
+    }
 }
 
 void Map::update() {

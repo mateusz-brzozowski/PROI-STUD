@@ -9,6 +9,16 @@ static bool is_interesting_key(SDL_Keycode k) {
     return k == SDLK_w || k == SDLK_a || k == SDLK_s || k == SDLK_d;
 }
 
+void WindowRenderer::before_render() { SDL_RenderClear(m_attached_renderer); }
+
+void WindowRenderer::render(IMapObject* object) {
+    SDL_RenderCopyEx(m_attached_renderer, object->get_texture(), NULL,
+                     object->get_texture_position(),
+                     object->get_texture_rotation(), NULL, SDL_FLIP_NONE);
+}
+
+void WindowRenderer::after_render() { SDL_RenderPresent(m_attached_renderer); }
+
 Window::~Window() { clean(); }
 
 void Window::init(const char* title, int width, int height, bool fullscreen) {

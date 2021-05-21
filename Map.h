@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "IMapObject.h"
+#include "IMapView.h"
 #include "Window.h"
 
 /**
@@ -17,19 +18,24 @@ class Map {
     /// Vector of elements on this map
     std::vector<std::unique_ptr<IMapObject>> m_objects;
 
+    /// Vector of all views of this map
+    std::vector<std::unique_ptr<IMapView>> m_views;
+
     /// Window connencted to this map
     Window m_window{};
-
-    /**
-     * Renders an object on the attached window
-     */
-    void draw(IMapObject* object);
 
    public:
     /**
      * Adds an object to the map and assumes ownership of that object.
      */
     void add(std::unique_ptr<IMapObject> object);
+
+    /**
+     * Attaches view to a map and assumes ownership of that view.
+     */
+    inline void add_view(std::unique_ptr<IMapView> view) {
+        m_views.push_back(std::move(view));
+    }
 
     /**
      * Initializes connections with all windows.
@@ -48,7 +54,7 @@ class Map {
     void update();
 
     /**
-     * Renders all objects
+     * Renders all objects on all views
      */
     void render();
 

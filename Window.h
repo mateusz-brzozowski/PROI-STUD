@@ -1,8 +1,31 @@
 #pragma once
 #include <SDL.h>
 
+#include <memory>
 #include <unordered_set>
 
+#include "IMapView.h"
+
+/**
+ * WindowRenderer implements the IMapView protocol,
+ * while being attached to a specific SDL_Renderer.
+ *
+ * Doesn't assume ownership of that Renderer, and doesn't free it!
+ */
+class WindowRenderer : public IMapView {
+   private:
+    SDL_Renderer*& m_attached_renderer;
+
+   public:
+    WindowRenderer(SDL_Renderer*& renderer) : m_attached_renderer(renderer) {}
+    void before_render() override;
+    void render(IMapObject*) override;
+    void after_render() override;
+};
+
+/**
+ * Window represents a main Window
+ */
 class Window {
    private:
     SDL_Window* m_sdl_window{NULL};
@@ -41,6 +64,13 @@ class Window {
      */
     inline bool is_pressed(SDL_Keycode key) {
         return m_pressed_keys.find(key) != m_pressed_keys.end();
+    }
+
+    /**
+     * Creates a WindowRenderer attached to this Window
+     */
+    inline std::unique_ptr<IMapView> create_mapview() {
+        return std::unique_ptr<IMapView>(new WindowRenderer(m_renderer));
     }
 
     inline SDL_Renderer* get_renderer() { return m_renderer; }
