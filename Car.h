@@ -5,6 +5,9 @@
 #include "Map.h"
 #include "Tools.h"
 
+/**
+ * Car is an IMapObject that represents, well, a Car.
+ */
 class Car : public IMapObject {
    private:
     SDL_Texture* m_texture{NULL};
