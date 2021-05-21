@@ -47,7 +47,7 @@ if(WIN32)
     set(SDL2_LIBRARIES SDL2::SDL2 SDL2::SDL2main)
 
     find_path(SDL2_INCLUDE_DIRS SDL.h PATH_SUFFIXES SDL2)
-    set(SDL2_INCLUDE_DIRS "${SDL2_INCLUDE_DIRS}/SDL2")
+    message("SDL2_INCLUDE_DIRS: ${SDL2_INCLUDE_DIRS}")
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(SDL2 REQUIRED sdl2)
