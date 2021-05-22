@@ -18,7 +18,14 @@ class Car : public IMapObject {
     int m_count{0};
     Map* m_map{nullptr};
 
+
+    bool userCar_;
+    Car* follow_car_;
+    Vector2D dst_position{700.0, 400.0};
+    double move_speed = 150.0;
+
    public:
+    Car(const bool userCar, const Vector2D& start_positon, Car* follow_car = nullptr);
     void set_map(Map* map) override;
     void update() override;
     SDL_Texture* get_texture() override;
