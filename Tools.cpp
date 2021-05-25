@@ -2,29 +2,31 @@
 
 #include <cmath>
 
-Vector2D Vector2D::operator-(const Vector2D& vector) { 
-    return {x - vector.x, y - vector.y};
+Vector2D Vector2D::operator-(Vector2D const& other) const {
+    return {x - other.x, y - other.y};
 }
 
-Vector2D Vector2D::operator+(const Vector2D& vector) {
-    return {x + vector.x, y + vector.y};
+Vector2D Vector2D::operator+(Vector2D const& other) const {
+    return {x + other.x, y + other.y};
 }
 
-Vector2D Vector2D::operator*(double value) { 
-    x *= value;
-    y *= value;
+Vector2D& Vector2D::operator+=(Vector2D const& other) {
+    x += other.x;
+    y += other.y;
     return *this;
 }
 
-double Vector2D::length() { 
-    return sqrt(pow(x, 2) + pow(y, 2)); 
+Vector2D Vector2D::operator*(double scalar) const {
+    return {x * scalar, y * scalar};
 }
+
+double Vector2D::length() const { return sqrt(x * x + y * y); }
 
 void Vector2D::normalize() {
     double tmp_length = length();
     if (tmp_length > 0) {
-        x = x / tmp_length;
-        y = y / tmp_length;
+        x /= tmp_length;
+        y /= tmp_length;
     }
 }
 
