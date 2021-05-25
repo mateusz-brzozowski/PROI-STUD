@@ -14,7 +14,7 @@
 void Car::set_map(Map* map) { m_map = map; }
 
 Car::Car(const bool userCar, const Vector2D& start_positon, Car* follow_car)
-    : userCar_(userCar), m_position(start_positon), follow_car_(follow_car)
+    : userCar_(userCar), m_position(start_positon), follow_car_(follow_car) 
 {}
 
 void Car::update() {
