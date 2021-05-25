@@ -62,4 +62,11 @@ class Map {
      * Returns a reference to the attached Window
      */
     inline Window& get_window() { return m_window; }
+
+    /**
+     * Returns a reference to the list of objects
+     */
+    inline std::vector<std::unique_ptr<IMapObject>> const& get_objects() {
+        return m_objects;
+    }
 };
