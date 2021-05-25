@@ -65,3 +65,13 @@ void AutonomousCar::update() {
         clamp_position();
     }
 }
+
+SDL_Texture* AutonomousCar::get_texture() {
+    if (!m_texture && m_map) {
+        m_texture = m_map->get_window().load_texture("images/car2.bmp");
+        m_texture_position.h = 18;
+        m_texture_position.w = 18;
+    }
+
+    return m_texture;
+}

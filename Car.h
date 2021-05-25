@@ -40,5 +40,6 @@ class AutonomousCar : public Car {
                   double speed = 150.0)
         : Car(start_position), m_follow_car(car_to_follow), m_speed(speed) {}
 
+    SDL_Texture* get_texture() override;
     void update() override;
 };
