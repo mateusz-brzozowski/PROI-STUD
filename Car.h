@@ -9,28 +9,37 @@
  * Car is an IMapObject that represents, well, a Car.
  */
 class Car : public IMapObject {
-   private:
-    const char& m_file;
+   protected:
     SDL_Texture* m_texture{NULL};
     SDL_Rect m_texture_position{0, 0, 0, 0};
 
     Vector2D m_position{0.0, 0.0};
     double m_angle{0.0};
-    int m_count{0};
     Map* m_map{nullptr};
 
-
-    bool userCar_;
-    Car* follow_car_;
-    Vector2D dst_position{700.0, 400.0};
-    double move_speed = 150.0;
+    void clamp_position();
 
    public:
-    Car(const bool userCar, const Vector2D& start_positon,
-        const char& file, Car* follow_car = nullptr);
+    Car(Vector2D start_position) : m_position(start_position) {}
     void set_map(Map* map) override;
     void update() override;
+
+    Vector2D const& get_position() { return m_position; }
     SDL_Texture* get_texture() override;
     SDL_Rect* get_texture_position() override;
     double get_texture_rotation() override;
+};
+
+class AutonomousCar : public Car {
+   protected:
+    Car* m_follow_car;
+    double m_speed;
+
+   public:
+    AutonomousCar(Vector2D start_position, Car* car_to_follow,
+                  double speed = 150.0)
+        : Car(start_position), m_follow_car(car_to_follow), m_speed(speed) {}
+
+    SDL_Texture* get_texture() override;
+    void update() override;
 };

@@ -63,7 +63,7 @@ void Window::init(const char* title, int width, int height, bool fullscreen) {
 }
 
 SDL_Texture* Window::load_texture(const char* file) {
-    SDL_Surface* tmp_surf = SDL_LoadBMP("images/car.bmp");
+    SDL_Surface* tmp_surf = SDL_LoadBMP(file);
     if (!tmp_surf) {
         std::cerr << "Failed to load BMP: " << SDL_GetError() << '\n';
         m_is_running = false;
