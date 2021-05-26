@@ -10,6 +10,7 @@
  */
 class Car : public IMapObject {
    private:
+    const char& m_file;
     SDL_Texture* m_texture{NULL};
     SDL_Rect m_texture_position{0, 0, 0, 0};
 
@@ -25,7 +26,8 @@ class Car : public IMapObject {
     double move_speed = 150.0;
 
    public:
-    Car(const bool userCar, const Vector2D& start_positon, Car* follow_car = nullptr);
+    Car(const bool userCar, const Vector2D& start_positon,
+        const char& file, Car* follow_car = nullptr);
     void set_map(Map* map) override;
     void update() override;
     SDL_Texture* get_texture() override;

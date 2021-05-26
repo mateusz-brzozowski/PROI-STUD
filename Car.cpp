@@ -13,8 +13,9 @@
 
 void Car::set_map(Map* map) { m_map = map; }
 
-Car::Car(const bool userCar, const Vector2D& start_positon, Car* follow_car)
-    : userCar_(userCar), m_position(start_positon), follow_car_(follow_car)
+Car::Car(const bool userCar, const Vector2D& start_positon,
+         const char& file, Car* follow_car)
+    : userCar_(userCar), m_position(start_positon), m_file(file), follow_car_(follow_car)
 {}
 
 void Car::update() {
@@ -59,7 +60,7 @@ void Car::update() {
 
 SDL_Texture* Car::get_texture() {
     if (!m_texture && m_map) {
-        m_texture = m_map->get_window().load_texture("images/car.bmp");
+        m_texture = m_map->get_window().load_texture("images/" + m_file);
         m_texture_position.h = 18;
         m_texture_position.w = 18;
     }
