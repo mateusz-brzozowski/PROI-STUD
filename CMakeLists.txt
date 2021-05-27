@@ -12,7 +12,6 @@ set(SOURCES
 
 set(FILES_TO_COPY
     images/car.bmp
-    images/car2.bmp
 )
 
 # Add a definition for debug builds
