@@ -4,6 +4,52 @@
 
 #include <cmath>
 
+#define EXPECT_VECTOR_NEAR(a, b) EXPECT_TRUE(VectorNear((a), (b)))
+
+testing::AssertionResult VectorNear(Vector2D const v1, Vector2D const v2,
+                                    double delta = 1e-6) {
+    double dx = std::abs(v1.x - v2.x);
+    double dy = std::abs(v1.y - v2.y);
+
+    if (dx > delta || dy > delta) {
+        return testing::AssertionFailure()
+               << "Vector2D{" << v1.x << ", " << v1.y
+               << "} isn't close to Vector2D{" << v2.x << ", " << v2.y << "}";
+    }
+
+    return testing::AssertionSuccess();
+}
+
+TEST(Vector2D, operators) {
+    Vector2D v1{0.0, 0.0};
+    Vector2D v2{0.0, 0.0};
+    Vector2D expected{0.0, 0.0};
+
+    // Adding and subtracting
+    EXPECT_VECTOR_NEAR(v1 + v2, expected);
+    EXPECT_VECTOR_NEAR(v1 - v2, expected);
+
+    v1 = {1.0, 1.0};
+    v2 = {1.0, 1.0};
+    EXPECT_VECTOR_NEAR(v1 - v2, expected);
+
+    expected = {2.0, 2.0};
+    EXPECT_VECTOR_NEAR(v1 + v2, expected);
+
+    // Adding with assignment
+    EXPECT_VECTOR_NEAR(v1 += v2, expected);
+    EXPECT_VECTOR_NEAR(v1, expected);
+
+    // Multiply by scalar
+    EXPECT_VECTOR_NEAR(v2 * 3.0, expected);
+
+    expected = {-1.0, -1.0};
+    EXPECT_VECTOR_NEAR(v1 * -.5, expected);
+
+    expected = {0.0, 0.0};
+    EXPECT_VECTOR_NEAR(v2 * 0.0, expected);
+}
+
 TEST(Vector2D, length) {
     Vector2D v = {0.0, 0.0};
     EXPECT_NEAR(v.length(), 0.0, 1e-6);
@@ -22,37 +68,43 @@ TEST(Vector2D, rotate) {
     // Null rotation
     Vector2D expected{1.0, 0.0};
     Vector2D got = Vector2D{1.0, 0.0}.rotate(0.0);
-    EXPECT_NEAR(expected.x, got.x, 1e-6);
-    EXPECT_NEAR(expected.y, got.y, 1e-6);
+    EXPECT_VECTOR_NEAR(got, expected);
 
     // 90-degree rotation
     expected = {0.0, 1.0};
     got = Vector2D{1.0, 0.0}.rotate(M_PI_2);
-    EXPECT_NEAR(expected.x, got.x, 1e-6);
-    EXPECT_NEAR(expected.y, got.y, 1e-6);
+    EXPECT_VECTOR_NEAR(got, expected);
 
     // 180-degree rotation
     expected = {0.0, 1.0};
     got = Vector2D{0.0, -1.0}.rotate(M_PI);
-    EXPECT_NEAR(expected.x, got.x, 1e-6);
-    EXPECT_NEAR(expected.y, got.y, 1e-6);
+    EXPECT_VECTOR_NEAR(got, expected);
 
     // 360-degree rotation
     expected = {1.0, 1.0};
     got = Vector2D{1.0, 1.0}.rotate(M_PI * 2);
-    EXPECT_NEAR(expected.x, got.x, 1e-6);
-    EXPECT_NEAR(expected.y, got.y, 1e-6);
+    EXPECT_VECTOR_NEAR(got, expected);
 }
 
 TEST(Vector2D, normalize) {
-    Vector2D v = {0.0, 0.0};
-    EXPECT_NEAR(v.normalize().length(), 0.0, 1e-6);
+    Vector2D got = {0.0, 0.0};
+    Vector2D expected = {0.0, 0.0};
 
-    v = {1.0, 0.0};
-    EXPECT_NEAR(v.normalize().length(), 1.0, 1e-6);
+    got.normalize();
+    EXPECT_VECTOR_NEAR(got, expected);
+    EXPECT_NEAR(got.length(), 0.0, 1e-6);
 
-    v = {42.0, -15.0};
-    EXPECT_NEAR(v.normalize().length(), 1.0, 1e-6);
+    got = {1.0, 0.0};
+    got.normalize();
+    expected = {1.0, 0.0};
+    EXPECT_NEAR(got.length(), 1.0, 1e-6);
+    EXPECT_VECTOR_NEAR(got, expected);
+
+    got = {42.0, -15.0};
+    got.normalize();
+    expected = {.94174191, -.3363364};
+    EXPECT_NEAR(got.length(), 1.0, 1e-6);
+    EXPECT_VECTOR_NEAR(got, expected);
 }
 
 TEST(Vector2D, distance) {
