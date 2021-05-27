@@ -20,6 +20,23 @@ testing::AssertionResult VectorNear(Vector2D const v1, Vector2D const v2,
     return testing::AssertionSuccess();
 }
 
+TEST(Clamp, int) {
+    EXPECT_EQ(CLAMP(-5, 0, 100), 0);
+    EXPECT_EQ(CLAMP(200, 0, 100), 100);
+    EXPECT_EQ(CLAMP(50, 0, 100), 50);
+}
+
+TEST(Clamp, double) {
+    EXPECT_NEAR(CLAMP(-5.0, 0.0, 100.0), 0.0, 1e-6);
+    EXPECT_NEAR(CLAMP(-HUGE_VAL, 0.0, 100.0), 0.0, 1e-6);
+
+    EXPECT_NEAR(CLAMP(128, 0.0, 100.0), 100.0, 1e-6);
+    EXPECT_NEAR(CLAMP(HUGE_VAL, 0.0, 100.0), 100.0, 1e-6);
+
+    EXPECT_NEAR(CLAMP(12.0, 0.0, 100.0), 12.0, 1e-6);
+    EXPECT_NEAR(CLAMP(64.0, 0.0, 100.0), 64.0, 1e-6);
+}
+
 TEST(Vector2D, operators) {
     Vector2D v1{0.0, 0.0};
     Vector2D v2{0.0, 0.0};
