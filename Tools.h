@@ -9,6 +9,7 @@ typedef struct Vector2D {
     Vector2D& operator+=(Vector2D const&);
     Vector2D operator*(double) const;
     double length() const;
+    Vector2D& rotate(double angle);
     void normalize();
 } Vector2D;
 

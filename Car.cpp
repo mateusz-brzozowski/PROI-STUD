@@ -35,7 +35,7 @@ void Car::update() {
     double distance = (m_map->get_window().is_pressed(SDLK_w) ? 5.0 : 0.0) -
                       (m_map->get_window().is_pressed(SDLK_s) ? 5.0 : 0.0);
 
-    m_position += rotate_vector({distance, 0}, m_angle);
+    m_position += Vector2D{distance, 0}.rotate(m_angle);
 
     clamp_position();
 }
