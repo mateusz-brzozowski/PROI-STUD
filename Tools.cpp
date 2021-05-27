@@ -32,14 +32,17 @@ Vector2D& Vector2D::rotate(double angle) {
     return *this;
 }
 
-void Vector2D::normalize() {
+Vector2D& Vector2D::normalize() {
     double tmp_length = length();
     if (tmp_length > 0) {
         x /= tmp_length;
         y /= tmp_length;
     }
+    return *this;
 }
 
-double distance(const Vector2D& vec1, const Vector2D& vec2) {
-    return sqrt(pow(vec1.x - vec2.x, 2) + pow(vec1.y - vec2.y, 2));
+double Vector2D::distance(Vector2D const& other) const {
+    double dx = x - other.x;
+    double dy = y - other.y;
+    return sqrt(dx * dx + dy * dy);
 }

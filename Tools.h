@@ -10,8 +10,6 @@ typedef struct Vector2D {
     Vector2D operator*(double) const;
     double length() const;
     Vector2D& rotate(double angle);
-    void normalize();
+    Vector2D& normalize();
+    double distance(Vector2D const&) const;
 } Vector2D;
-
-double distance(Vector2D const&, Vector2D const&);
-Vector2D rotate_vector(Vector2D, double);

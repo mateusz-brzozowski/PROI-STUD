@@ -55,7 +55,7 @@ SDL_Rect* Car::get_texture_position() { return &m_texture_position; }
 double Car::get_texture_rotation() { return m_angle * 180.0 / M_PI; }
 
 void AutonomousCar::update() {
-    if (distance(m_follow_car->get_position(), m_position) > 20) {
+    if (m_follow_car->get_position().distance(m_position) > 20) {
         Vector2D direction = m_follow_car->get_position() - m_position;
         float angle = atan2(direction.y, direction.x);
         direction.normalize();
