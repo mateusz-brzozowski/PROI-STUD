@@ -14,7 +14,7 @@ class Object : public IMapObject {
     double m_angle{0.0};
 
    public:
-    Object(const char& texture_file, SDL_Rect, texture_position)
+    Object(const char& texture_file, SDL_Rect texture_position)
         : m_texture_file(texture_file), m_texture_position(texture_position) {}
     void set_map(Map* map) override;
     void update() override;
@@ -29,11 +29,9 @@ class Lake : public Object {
     SDL_Texture* get_texture() override;
 };
 
-class Hole : public Object {
-};
+class Hole : public Object {};
 
-class Bush : public Object {
-};
+class Bush : public Object {};
 
 class Bus : public Object {
    public:
