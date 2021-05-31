@@ -4,6 +4,7 @@
 
 #include "Car.h"
 #include "Map.h"
+#include "Object.h"
 
 int main(int argc, const char* argv[]) {
     Map m{};
@@ -14,6 +15,7 @@ int main(int argc, const char* argv[]) {
 
     m.add(std::move(c1));
     m.add(std::move(c2));
+    m.add(std::move(std::unique_ptr<IMapObject>(new Hole({100, 100, 1, 1}))));
 
     m.init();
     m.loop();

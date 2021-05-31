@@ -8,10 +8,16 @@ set(SOURCES
     Map.cpp
     Window.cpp
     Tools.cpp
+    Object.cpp
 )
 
 set(FILES_TO_COPY
     images/car.bmp
+    images/car2.bmp
+    images/bus.bmp
+    images/bush.bmp
+    images/hole.bmp
+    images/lake.bmp
 )
 
 # Add a definition for debug builds
