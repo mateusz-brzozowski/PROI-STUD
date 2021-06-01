@@ -46,3 +46,8 @@ double Vector2D::distance(Vector2D const& other) const {
     double dy = y - other.y;
     return sqrt(dx * dx + dy * dy);
 }
+
+bool CollisionAABB(const SDL_Rect* recA, const SDL_Rect* recB) {
+    return recA->x + recA->w >= recB->x && recB->x + recB->w >= recA->x &&
+           recA->y + recA->h >= recB->y && recB->y + recB->h >= recA->y;
+}

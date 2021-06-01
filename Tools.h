@@ -1,4 +1,5 @@
 #pragma once
+#include <SDL.h>
 
 #define CLAMP(v, l, h) ((v) < (l)) ? (l) : ((v) > (h)) ? (h) : (v)
 
@@ -13,3 +14,5 @@ typedef struct Vector2D {
     Vector2D& normalize();
     double distance(Vector2D const&) const;
 } Vector2D;
+
+bool CollisionAABB(const SDL_Rect* recA, const SDL_Rect* recB);

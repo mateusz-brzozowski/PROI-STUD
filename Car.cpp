@@ -34,10 +34,17 @@ void Car::update() {
     // Then move the car in the direction pointed by angle
     double distance = (m_map->get_window().is_pressed(SDLK_w) ? 5.0 : 0.0) -
                       (m_map->get_window().is_pressed(SDLK_s) ? 5.0 : 0.0);
-
-    m_position += Vector2D{distance, 0}.rotate(m_angle);
-
+    auto old_pos = m_position;
+    m_position +=  Vector2D{distance, 0}.rotate(m_angle);
     clamp_position();
+    for (auto &e : m_map->get_objects()) {
+        if (*e != *this &&
+            CollisionAABB(get_texture_position(), e->get_texture_position())) {
+            m_position = old_pos;
+            clamp_position();
+            break;
+        }
+    }
 }
 
 SDL_Texture* Car::get_texture() {
@@ -55,14 +62,23 @@ SDL_Rect* Car::get_texture_position() { return &m_texture_position; }
 double Car::get_texture_rotation() { return m_angle * 180.0 / M_PI; }
 
 void AutonomousCar::update() {
-    if (m_follow_car->get_position().distance(m_position) > 20) {
+    if (m_follow_car->get_position().distance(m_position) > 30) {
         Vector2D direction = m_follow_car->get_position() - m_position;
         float angle = atan2(direction.y, direction.x);
         direction.normalize();
 
         m_angle = angle;
+        auto old_pos = m_position;
         m_position += (direction * (m_speed * 1 / 60));
         clamp_position();
+        for (auto& e : m_map->get_objects()) {
+            if (*e != *this && CollisionAABB(get_texture_position(),
+                                             e->get_texture_position())) {
+                m_position = old_pos;
+                clamp_position();
+                break;
+            }
+        }
     }
 }
 

@@ -38,4 +38,6 @@ class IMapObject {
      * for the texture to be rotated before being drawn on the screen
      */
     virtual double get_texture_rotation() = 0;
+
+    bool operator!=(IMapObject& other) const { return this != &other; }
 };
