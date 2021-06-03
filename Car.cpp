@@ -52,11 +52,9 @@ void Car::update() {
 }
 
 SDL_Texture* Car::get_texture() {
-    if (!m_texture && m_map) {
-        m_texture = m_map->get_window().load_texture("images/car.bmp");
-        m_texture_position.h = 18;
-        m_texture_position.w = 18;
-    }
+    if (!m_texture && m_map)
+        m_texture = m_map->get_window().load_texture(
+            m_texture_fname, &m_texture_position.w, &m_texture_position.h);
 
     return m_texture;
 }
@@ -75,11 +73,9 @@ void AutonomousCar::update() {
 }
 
 SDL_Texture* AutonomousCar::get_texture() {
-    if (!m_texture && m_map) {
-        m_texture = m_map->get_window().load_texture("images/car2.bmp");
-        m_texture_position.h = 18;
-        m_texture_position.w = 18;
-    }
+    if (!m_texture && m_map)
+        m_texture = m_map->get_window().load_texture(
+            m_texture_fname, &m_texture_position.w, &m_texture_position.h);
 
     return m_texture;
 }

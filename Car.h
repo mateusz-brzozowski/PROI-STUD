@@ -25,6 +25,9 @@ class Car : public IMapObject {
     /// A pointer to the connected map
     Map* m_map{nullptr};
 
+    /// Name of the BMP with a given texture
+    static constexpr char const* m_texture_fname = "images/car.bmp";
+
     /**
      * validate_new_position() first checks if the new position is within the
      * bound of the Map, then checks if the new position collides with any other
@@ -57,6 +60,9 @@ class AutonomousCar : public Car {
 
     /// Max allowed speed of this autonomous car
     double m_speed;
+
+    /// Name of the BMP with a given texture
+    static constexpr char const* m_texture_fname = "images/car2.bmp";
 
    public:
     AutonomousCar(Vector2D start_position, Car* car_to_follow,

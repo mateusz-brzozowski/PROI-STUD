@@ -62,7 +62,8 @@ void Window::init(const char* title, int width, int height, bool fullscreen) {
     }
 }
 
-SDL_Texture* Window::load_texture(const char* file) {
+SDL_Texture* Window::load_texture(const char* file, int* w, int* h) {
+    // Load the BMP file
     SDL_Surface* tmp_surf = SDL_LoadBMP(file);
     if (!tmp_surf) {
         std::cerr << "Failed to load BMP: " << SDL_GetError() << '\n';
@@ -70,14 +71,21 @@ SDL_Texture* Window::load_texture(const char* file) {
         return NULL;
     }
 
+    // Create a texture from that surface
     SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, tmp_surf);
-    SDL_FreeSurface(tmp_surf);
 
     if (!texture) {
         std::cerr << "Failed to create texture: " << SDL_GetError() << '\n';
         m_is_running = false;
     }
 
+    // Set the width and height
+    if (w) *w = tmp_surf->w;
+    if (h) *h = tmp_surf->h;
+
+    // Deallocate the surface (it's not needed anymore), and
+    // return a pointer to that allocated Texture.
+    SDL_FreeSurface(tmp_surf);
     return texture;
 }
 
