@@ -15,7 +15,7 @@ int main(int argc, const char* argv[]) {
     m.add(new AutonomousCar({20, 20}, main_car));
     m.add(new Hole({100, 100, 1, 1}));
     m.add(new Lake({250, 100, 1, 1}));
-    m.add(new Bus({150, 200, 1, 1}));
+    m.add(new Bus({150, 200, 1, 1}, 90));
     m.add(new Bush({300, 200, 1, 1}));
 
     m.init();
