@@ -29,6 +29,11 @@ void Map::add(std::unique_ptr<IMapObject> object) {
     m_objects.push_back(std::move(object));
 }
 
+void Map::add(IMapObject* object) {
+    object->set_map(this);
+    m_objects.emplace_back(object);
+}
+
 void Map::render() {
     for (auto const& view : m_views) {
         view->before_render();

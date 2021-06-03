@@ -31,6 +31,13 @@ class Map {
     void add(std::unique_ptr<IMapObject> object);
 
     /**
+     * Adds an object to the map and assumes ownership of that object.
+     * This overload will automatically wrap provided pointer into a
+     * std::unique_ptr, so that object will be automatically deallocated.
+     */
+    void add(IMapObject* object);
+
+    /**
      * Attaches view to a map and assumes ownership of that view.
      */
     inline void add_view(std::unique_ptr<IMapView> view) {
