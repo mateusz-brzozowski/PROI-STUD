@@ -58,7 +58,7 @@ TEST(Vector2D, operators) {
     EXPECT_VECTOR_NEAR(v1, expected);
 
     // Multiply by scalar
-    EXPECT_VECTOR_NEAR(v2 * 3.0, expected);
+    EXPECT_VECTOR_NEAR(v2 * 2.0, expected);
 
     expected = {-1.0, -1.0};
     EXPECT_VECTOR_NEAR(v1 * -.5, expected);
