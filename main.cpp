@@ -20,7 +20,6 @@ int main(int argc, const char* argv[]) {
     m.add(std::move(std::unique_ptr<IMapObject>(new Bus({150, 200, 1, 1}))));
     m.add(std::move(std::unique_ptr<IMapObject>(new Bush({300, 200, 1, 1}))));
 
-
     m.init();
     m.loop();
     return 0;

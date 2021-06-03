@@ -39,5 +39,10 @@ class IMapObject {
      */
     virtual double get_texture_rotation() = 0;
 
-    bool operator!=(IMapObject& other) const { return this != &other; }
+    /**
+     * Checks if some IMapObject is a different from another one
+     */
+    virtual bool operator!=(IMapObject const& other) const {
+        return this != &other;
+    }
 };
