@@ -17,16 +17,13 @@ class Car : public IMapObject {
     SDL_Rect m_texture_position{0, 0, 0, 0};
 
     /// Position of the car
-    Vector2D m_position{0.0, 0.0};
-
-    /// Angle of the car
-    double m_angle{0.0};
+    RotatedRect m_position;
 
     /// A pointer to the connected map
     Map* m_map{nullptr};
 
     /// Name of the BMP with a given texture
-    static constexpr char const* m_texture_fname = "images/car.bmp";
+    static constexpr char const* m_texture_file = "images/car.bmp";
 
     /**
      * validate_new_position() first checks if the new position is within the
@@ -39,14 +36,19 @@ class Car : public IMapObject {
     bool validate_new_position(Vector2D);
 
    public:
-    Car(Vector2D start_position) : m_position(start_position) {}
+    Car(Vector2D start_position, double angle = 0)
+        : m_position(start_position, 0, 0, angle) {}
     void set_map(Map* map) override;
     void update() override;
 
-    Vector2D const& get_position() { return m_position; }
     SDL_Texture* get_texture() override;
-    SDL_Rect* get_texture_position() override;
-    double get_texture_rotation() override;
+    inline SDL_Rect* get_texture_position() override {
+        return &m_texture_position;
+    }
+    inline double get_texture_rotation() override {
+        return m_position.angle_deg();
+    }
+    inline RotatedRect* get_bbox() override { return &m_position; }
 };
 
 /**
@@ -56,18 +58,18 @@ class Car : public IMapObject {
 class AutonomousCar : public Car {
    protected:
     /// The car to follow
-    Car* m_follow_car;
+    IMapObject* m_target;
 
     /// Max allowed speed of this autonomous car
     double m_speed;
 
     /// Name of the BMP with a given texture
-    static constexpr char const* m_texture_fname = "images/car2.bmp";
+    static constexpr char const* m_texture_file = "images/car2.bmp";
 
    public:
-    AutonomousCar(Vector2D start_position, Car* car_to_follow,
-                  double speed = 150.0)
-        : Car(start_position), m_follow_car(car_to_follow), m_speed(speed) {}
+    AutonomousCar(Vector2D start_position, IMapObject* target,
+                  double speed = 150.0, double angle = 0)
+        : Car(start_position, angle), m_target(target), m_speed(speed) {}
 
     SDL_Texture* get_texture() override;
     void update() override;

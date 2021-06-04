@@ -1,6 +1,8 @@
 #pragma once
 #include <SDL.h>
 
+#include "Tools.h"
+
 // Forward declaration, as Map.h/Map.cpp will include IMapObject.h
 class Map;
 
@@ -38,6 +40,12 @@ class IMapObject {
      * for the texture to be rotated before being drawn on the screen
      */
     virtual double get_texture_rotation() = 0;
+
+    /**
+     * get_bbox() should return a pointer to a RotatedRect,
+     * which will be treadted as a bounding box for collision detection.
+     */
+    virtual RotatedRect* get_bbox() = 0;
 
     /**
      * Checks if some IMapObject is a different from another one

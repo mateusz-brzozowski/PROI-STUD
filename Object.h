@@ -15,11 +15,11 @@ class Object : public IMapObject {
     /// SDL_Texture of that object, if loaded
     SDL_Texture* m_texture{nullptr};
 
-    /// Position of the Object
+    /// Position of the texture
     SDL_Rect m_texture_position{0, 0, 0, 0};
 
-    /// Rotation of the Object
-    double m_angle{0.0};
+    /// Position of the Object
+    RotatedRect m_position;
 
     /// Link to the underlying Map; required for texture loading
     Map* m_map{nullptr};
@@ -29,15 +29,11 @@ class Object : public IMapObject {
      * Create an Object.
      *
      * @param texture_file path to a BMP with texture of the object
-     * @param texture_position where to place this Object on the Map; w and h
-     * attributes are ignored
-     * @param angle at which angle place to place this object (in degrees)
+     * @param center where to place this Object on the Map
+     * @param angle at which angle place to place this object (in radians)
      */
-    Object(char const* texture_file, SDL_Rect texture_position = {0, 0, 0, 0},
-           double angle = 0)
-        : m_texture_file(texture_file),
-          m_texture_position(texture_position),
-          m_angle(angle) {}
+    Object(char const* texture_file, Vector2D center = {0, 0}, double angle = 0)
+        : m_texture_file(texture_file), m_position(center, 0, 0, angle) {}
 
     /**
      * Set a link to any Map. An Object without a Map will not be able
@@ -51,8 +47,13 @@ class Object : public IMapObject {
     void update() override;
 
     SDL_Texture* get_texture() override;
-    SDL_Rect* get_texture_position() override;
-    double get_texture_rotation() override;
+    inline SDL_Rect* get_texture_position() override {
+        return &m_texture_position;
+    }
+    inline double get_texture_rotation() override {
+        return m_position.angle_deg();
+    }
+    inline RotatedRect* get_bbox() override { return &m_position; }
 };
 
 /**
@@ -62,12 +63,11 @@ class Lake : public Object {
    public:
     /**
      * Create a static Lake on the map.
-     * @param texture_position where to place this Object on the Map; w and h
-     * attributes are ignored
-     * @param angle at which angle place to place this object (in degrees)
+     * @param center where to place this Object on the Map
+     * @param angle at which angle place to place this object (in radians)
      */
-    Lake(SDL_Rect texture_position = {0, 0, 0, 0}, double angle = 0)
-        : Object("images/lake.bmp", texture_position, angle) {}
+    Lake(Vector2D center = {0, 0}, double angle = 0)
+        : Object("images/lake.bmp", center, angle) {}
 };
 
 /**
@@ -77,12 +77,11 @@ class Hole : public Object {
    public:
     /**
      * Create a static Hole on the map.
-     * @param texture_position where to place this Object on the Map; w and h
-     * attributes are ignored
-     * @param angle at which angle place to place this object (in degrees)
+     * @param center where to place this Object on the Map
+     * @param angle at which angle place to place this object (in radians)
      */
-    Hole(SDL_Rect texture_position = {0, 0, 0, 0}, double angle = 0)
-        : Object("images/hole.bmp", texture_position, angle) {}
+    Hole(Vector2D center = {0, 0}, double angle = 0)
+        : Object("images/hole.bmp", center, angle) {}
 };
 
 /**
@@ -92,12 +91,11 @@ class Bush : public Object {
    public:
     /**
      * Create a static Bush on the map.
-     * @param texture_position where to place this Object on the Map; w and h
-     * attributes are ignored
-     * @param angle at which angle place to place this object (in degrees)
+     * @param center where to place this Object on the Map
+     * @param angle at which angle place to place this object (in radians)
      */
-    Bush(SDL_Rect texture_position = {0, 0, 0, 0}, double angle = 0)
-        : Object("images/bush.bmp", texture_position, angle) {}
+    Bush(Vector2D center = {0, 0}, double angle = 0)
+        : Object("images/bush.bmp", center, angle) {}
 };
 
 /**
@@ -107,10 +105,9 @@ class Bus : public Object {
    public:
     /**
      * Create a static Bus on the map.
-     * @param texture_position where to place this Object on the Map; w and h
-     * attributes are ignored
-     * @param angle at which angle place to place this object (in degrees)
+     * @param center where to place this Object on the Map
+     * @param angle at which angle place to place this object (in radians)
      */
-    Bus(SDL_Rect texture_position = {0, 0, 0, 0}, double angle = 0)
-        : Object("images/bus.bmp", texture_position, angle) {}
+    Bus(Vector2D center = {0, 0}, double angle = 0)
+        : Object("images/bus.bmp", center, angle) {}
 };

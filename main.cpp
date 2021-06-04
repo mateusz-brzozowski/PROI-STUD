@@ -1,5 +1,6 @@
 #include <SDL.h>
 
+#include <cmath>
 #include <memory>
 
 #include "Car.h"
@@ -13,10 +14,10 @@ int main(int argc, const char* argv[]) {
 
     m.add(main_car);
     m.add(new AutonomousCar({20, 20}, main_car));
-    m.add(new Hole({100, 100, 1, 1}));
-    m.add(new Lake({250, 100, 1, 1}));
-    m.add(new Bus({150, 200, 1, 1}, 90));
-    m.add(new Bush({300, 200, 1, 1}));
+    m.add(new Hole({100, 100}));
+    m.add(new Lake({250, 100}));
+    m.add(new Bus({150, 200}, M_PI_4));
+    m.add(new Bush({300, 200}));
 
     m.init();
     m.loop();

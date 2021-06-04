@@ -1,5 +1,6 @@
 #include "../Tools.h"
 
+#include <SDL.h>
 #include <gtest/gtest.h>
 
 #include <cmath>
@@ -138,4 +139,37 @@ TEST(Vector2D, distance) {
 
     v1 = {-1, -1};
     EXPECT_NEAR(v1.distance(v2), 2 * M_SQRT2, 1e-6);
+}
+
+TEST(IntervalsOverlap, normal) {
+    EXPECT_TRUE(intervals_overlap({1, 3}, {2, 4}));
+    EXPECT_TRUE(intervals_overlap({2, 4}, {1, 3}));
+    EXPECT_TRUE(intervals_overlap({-5, 5}, {-10, -2}));
+
+    EXPECT_FALSE(intervals_overlap({1, 3}, {4, 6}));
+    EXPECT_FALSE(intervals_overlap({-5, -2}, {-1, 5}));
+}
+
+TEST(RotatedRect, vertices) {
+    auto points = RotatedRect({2, 2}, 1, 1, 0).vertices();
+    EXPECT_TRUE(VectorNear(points[0], {3, 3}));
+    EXPECT_TRUE(VectorNear(points[1], {3, 1}));
+    EXPECT_TRUE(VectorNear(points[2], {1, 3}));
+    EXPECT_TRUE(VectorNear(points[3], {1, 1}));
+
+    points = RotatedRect({2, 2}, 1, 1, M_PI_4).vertices();
+    EXPECT_TRUE(VectorNear(points[0], {2, 3.41421356}));
+    EXPECT_TRUE(VectorNear(points[1], {3.41421356, 2}));
+    EXPECT_TRUE(VectorNear(points[2], {0.58578644, 2}));
+    EXPECT_TRUE(VectorNear(points[3], {2, 0.58578644}));
+}
+
+TEST(RotatedRect, edge_axes) {
+    auto edge_axes = RotatedRect({2, 2}, 1, 1, 0).edge_axes();
+    EXPECT_TRUE(VectorNear(edge_axes[0], {1, 0}));
+    EXPECT_TRUE(VectorNear(edge_axes[1], {0, 1}));
+
+    edge_axes = RotatedRect({2, 2}, 1, 1, M_PI_4).edge_axes();
+    EXPECT_TRUE(VectorNear(edge_axes[0], {.70710678, .70710678}));
+    EXPECT_TRUE(VectorNear(edge_axes[1], {-.70710678, .70710678}));
 }

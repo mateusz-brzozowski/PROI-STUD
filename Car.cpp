@@ -13,69 +13,84 @@
 
 void Car::set_map(Map* map) { m_map = map; }
 
-bool Car::validate_new_position(Vector2D new_pos) {
+bool Car::validate_new_position(Vector2D temp_pos) {
     // Clamp within Map bounds
-    double w = m_map->get_window().get_width() - 18;
-    double h = m_map->get_window().get_height() - 18;
+    double w = m_map->get_window().get_width() - 9;
+    double h = m_map->get_window().get_height() - 9;
 
-    new_pos.x = CLAMP(new_pos.x, 0, w);
-    new_pos.y = CLAMP(new_pos.y, 0, h);
+    temp_pos.x = CLAMP(temp_pos.x, 9, w);
+    temp_pos.y = CLAMP(temp_pos.y, 9, h);
+
+    std::swap(m_position.m_center, temp_pos);
 
     // Check for collisions
-    SDL_Rect new_texture_pos = m_texture_position;
-    new_texture_pos.x = new_pos.x;
-    new_texture_pos.y = new_pos.y;
-
-    for (auto& e : m_map->get_objects())
-        if (*e != *this &&
-            CollisionAABB(e->get_texture_position(), &new_texture_pos)) {
+    for (auto& o : m_map->get_objects())
+        if (*o != *this && m_position.collides(*o->get_bbox())) {
             // Collision with a different object detected
-            // - don't update the position
+            // - swap back the previous position
+            std::swap(m_position.m_center, temp_pos);
             return false;
         }
 
-    m_position = new_pos;
-    m_texture_position = new_texture_pos;
+    m_position.update_sdl_rect_position(&m_texture_position);
     return true;
 }
 
 void Car::update() {
     // First, update the angle
-    m_angle += m_map->get_window().is_pressed(SDLK_d) ? .1 : 0.0;
-    m_angle -= m_map->get_window().is_pressed(SDLK_a) ? .1 : 0.0;
+    m_position.m_angle += m_map->get_window().is_pressed(SDLK_d) ? .1 : 0.0;
+    m_position.m_angle -= m_map->get_window().is_pressed(SDLK_a) ? .1 : 0.0;
 
     // Then move the car in the direction pointed by angle
     double distance = (m_map->get_window().is_pressed(SDLK_w) ? 5.0 : 0.0) -
                       (m_map->get_window().is_pressed(SDLK_s) ? 5.0 : 0.0);
 
-    validate_new_position(m_position + Vector2D{distance, 0}.rotate(m_angle));
+    validate_new_position(m_position.m_center +
+                          Vector2D{distance, 0}.rotate(m_position.m_angle));
 }
 
 SDL_Texture* Car::get_texture() {
-    if (!m_texture && m_map)
+    if (!m_texture && m_map) {
+        // Load the texture, and its width and height
         m_texture = m_map->get_window().load_texture(
-            m_texture_fname, &m_texture_position.w, &m_texture_position.h);
+            m_texture_file, &m_texture_position.w, &m_texture_position.h);
+
+        // Save the width and heigh in `m_position`
+        m_position.m_width_half = (double)m_texture_position.w * .5;
+        m_position.m_height_half = (double)m_texture_position.h * .5;
+
+        // Save texture position
+        m_position.update_sdl_rect_position(&m_texture_position);
+    }
 
     return m_texture;
 }
 
-SDL_Rect* Car::get_texture_position() { return &m_texture_position; }
-
-double Car::get_texture_rotation() { return m_angle * 180.0 / M_PI; }
-
 void AutonomousCar::update() {
-    if (m_follow_car->get_position().distance(m_position) > 30) {
-        Vector2D direction = m_follow_car->get_position() - m_position;
-        m_angle = atan2(direction.y, direction.x);
+    Vector2D& target_pos = m_target->get_bbox()->m_center;
+
+    if (target_pos.distance(m_position.m_center) > 30) {
+        Vector2D direction = target_pos - m_position.m_center;
+        m_position.m_angle = atan2(direction.y, direction.x);
         direction.normalize();
-        validate_new_position(m_position + (direction * (m_speed * 1 / 60)));
+        validate_new_position(m_position.m_center +
+                              (direction * (m_speed * 1 / 60)));
     }
 }
 
 SDL_Texture* AutonomousCar::get_texture() {
-    if (!m_texture && m_map)
+    if (!m_texture && m_map) {
+        // Load the texture, and its width and height
         m_texture = m_map->get_window().load_texture(
-            m_texture_fname, &m_texture_position.w, &m_texture_position.h);
+            m_texture_file, &m_texture_position.w, &m_texture_position.h);
+
+        // Save the width and heigh in `m_position`
+        m_position.m_width_half = (double)m_texture_position.w * .5;
+        m_position.m_height_half = (double)m_texture_position.h * .5;
+
+        // Save texture position
+        m_position.update_sdl_rect_position(&m_texture_position);
+    }
 
     return m_texture;
 }
