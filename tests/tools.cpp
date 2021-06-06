@@ -21,6 +21,11 @@ testing::AssertionResult VectorNear(Vector2D const v1, Vector2D const v2,
     return testing::AssertionSuccess();
 }
 
+// TODO: Test project_points()
+// TODO: Test RotatedRect::collides()
+// TODO: Test RotatedRect::update_sdl_rect_position()
+// TODO: Test RotatedRect::angle_deg()
+
 TEST(Clamp, int) {
     EXPECT_EQ(CLAMP(-5, 0, 100), 0);
     EXPECT_EQ(CLAMP(200, 0, 100), 100);
@@ -55,7 +60,7 @@ TEST(Vector2D, operators) {
     EXPECT_VECTOR_NEAR(v1 + v2, expected);
 
     // Adding with assignment
-    EXPECT_VECTOR_NEAR(v1 += v2, expected);
+    EXPECT_VECTOR_NEAR(v1 = v1 + v2, expected);
     EXPECT_VECTOR_NEAR(v1, expected);
 
     // Multiply by scalar
