@@ -28,9 +28,9 @@ class WindowRenderer : public IMapView {
  */
 class Window {
    private:
-    SDL_Window* m_sdl_window{NULL};
-    SDL_Renderer* m_renderer{NULL};
-    std::unordered_set<SDL_Keycode> m_pressed_keys{};
+    SDL_Window* m_sdl_window{nullptr};
+    SDL_Renderer* m_renderer{nullptr};
+    unsigned char m_pressed_keys{0};
     int m_width{-1};
     int m_height{-1};
     bool m_is_running{false};
@@ -64,21 +64,15 @@ class Window {
     void clean();
 
     /**
-     * Checks whether a key is pressed
-     */
-    inline bool is_pressed(SDL_Keycode key) {
-        return m_pressed_keys.find(key) != m_pressed_keys.end();
-    }
-
-    /**
      * Creates a WindowRenderer attached to this Window
      */
-    inline std::unique_ptr<IMapView> create_mapview() {
-        return std::unique_ptr<IMapView>(new WindowRenderer(m_renderer));
+    inline std::shared_ptr<IMapView> create_mapview() {
+        return std::shared_ptr<IMapView>(new WindowRenderer(m_renderer));
     }
 
     inline SDL_Renderer* get_renderer() { return m_renderer; }
     inline int get_width() { return m_width; }
     inline int get_height() { return m_height; }
+    inline unsigned char const get_pressed_keys() { return m_pressed_keys; }
     inline bool is_running() { return m_is_running; }
 };

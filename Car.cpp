@@ -8,18 +8,17 @@
 #include <cmath>
 #include <iostream>
 
+#include "IMap.h"
 #include "Tools.h"
-#include "Window.h"
 
-void Car::set_map(Map* map) { m_map = map; }
+void Car::set_map(IMap* map) { m_map = map; }
 
 bool Car::validate_new_position(Vector2D temp_pos) {
     // Clamp within Map bounds
-    double w = m_map->get_window().get_width() - 9;
-    double h = m_map->get_window().get_height() - 9;
+    Vector2D bounds = m_map->get_bounds() - Vector2D{9, 9};
 
-    temp_pos.x = CLAMP(temp_pos.x, 9, w);
-    temp_pos.y = CLAMP(temp_pos.y, 9, h);
+    temp_pos.x = CLAMP(temp_pos.x, 9, bounds.x);
+    temp_pos.y = CLAMP(temp_pos.y, 9, bounds.y);
 
     std::swap(m_position.m_center, temp_pos);
 
@@ -38,12 +37,13 @@ bool Car::validate_new_position(Vector2D temp_pos) {
 
 void Car::update() {
     // First, update the angle
-    m_position.m_angle += m_map->get_window().is_pressed(SDLK_d) ? .1 : 0.0;
-    m_position.m_angle -= m_map->get_window().is_pressed(SDLK_a) ? .1 : 0.0;
+    auto pressed_keys = m_map->get_pressed_keys();
+    m_position.m_angle += pressed_keys & KEY_D ? .1 : 0.0;
+    m_position.m_angle -= pressed_keys & KEY_A ? .1 : 0.0;
 
     // Then move the car in the direction pointed by angle
-    double distance = (m_map->get_window().is_pressed(SDLK_w) ? 5.0 : 0.0) -
-                      (m_map->get_window().is_pressed(SDLK_s) ? 5.0 : 0.0);
+    double distance =
+        (pressed_keys & KEY_W ? 5.0 : 0.0) - (pressed_keys & KEY_S ? 5.0 : 0.0);
 
     validate_new_position(m_position.m_center +
                           Vector2D{distance, 0}.rotate(m_position.m_angle));
@@ -52,8 +52,8 @@ void Car::update() {
 SDL_Texture* Car::get_texture() {
     if (!m_texture && m_map) {
         // Load the texture, and its width and height
-        m_texture = m_map->get_window().load_texture(
-            m_texture_file, &m_texture_position.w, &m_texture_position.h);
+        m_texture = m_map->load_texture(m_texture_file, &m_texture_position.w,
+                                        &m_texture_position.h);
 
         // Save the width and heigh in `m_position`
         m_position.m_width_half = (double)m_texture_position.w * .5;
@@ -81,8 +81,8 @@ void AutonomousCar::update() {
 SDL_Texture* AutonomousCar::get_texture() {
     if (!m_texture && m_map) {
         // Load the texture, and its width and height
-        m_texture = m_map->get_window().load_texture(
-            m_texture_file, &m_texture_position.w, &m_texture_position.h);
+        m_texture = m_map->load_texture(m_texture_file, &m_texture_position.w,
+                                        &m_texture_position.h);
 
         // Save the width and heigh in `m_position`
         m_position.m_width_half = (double)m_texture_position.w * .5;

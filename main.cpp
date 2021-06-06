@@ -8,7 +8,7 @@
 #include "Object.h"
 
 int main(int argc, const char* argv[]) {
-    Map m{};
+    MapWithSDL m{};
 
     auto main_car = new Car({500, 500});
 

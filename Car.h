@@ -1,8 +1,8 @@
 #pragma once
 #include <SDL.h>
 
+#include "IMap.h"
 #include "IMapObject.h"
-#include "Map.h"
 #include "Tools.h"
 
 /**
@@ -20,7 +20,7 @@ class Car : public IMapObject {
     RotatedRect m_position;
 
     /// A pointer to the connected map
-    Map* m_map{nullptr};
+    IMap* m_map{nullptr};
 
     /// Name of the BMP with a given texture
     static constexpr char const* m_texture_file = "images/car.bmp";
@@ -38,7 +38,7 @@ class Car : public IMapObject {
    public:
     Car(Vector2D start_position, double angle = 0)
         : m_position(start_position, 0, 0, angle) {}
-    void set_map(Map* map) override;
+    void set_map(IMap* map) override;
     void update() override;
 
     SDL_Texture* get_texture() override;

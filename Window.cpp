@@ -5,8 +5,22 @@
 #include <cassert>
 #include <iostream>
 
-static bool is_interesting_key(SDL_Keycode k) {
-    return k == SDLK_w || k == SDLK_a || k == SDLK_s || k == SDLK_d;
+#include "IMap.h"
+
+static unsigned char convert_keycode(SDL_Keycode k) {
+    switch (k) {
+        case SDLK_w:
+            return KEY_W;
+        case SDLK_a:
+            return KEY_A;
+        case SDLK_s:
+            return KEY_S;
+        case SDLK_d:
+            return KEY_D;
+        case SDLK_SPACE:
+            return KEY_Space;
+    }
+    return 0;
 }
 
 void WindowRenderer::before_render() { SDL_RenderClear(m_attached_renderer); }
@@ -98,13 +112,10 @@ void Window::handleEvents() {
                 m_is_running = false;
                 break;
             case SDL_KEYDOWN:
-                if (is_interesting_key(event.key.keysym.sym))
-                    m_pressed_keys.insert(event.key.keysym.sym);
+                m_pressed_keys |= convert_keycode(event.key.keysym.sym);
                 break;
             case SDL_KEYUP:
-                auto key_ptr = m_pressed_keys.find(event.key.keysym.sym);
-                if (key_ptr != m_pressed_keys.end())
-                    m_pressed_keys.erase(key_ptr);
+                m_pressed_keys &= ~convert_keycode(event.key.keysym.sym);
                 break;
         }
     }

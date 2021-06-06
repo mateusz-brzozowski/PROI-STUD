@@ -4,7 +4,7 @@
 #include "Tools.h"
 
 // Forward declaration, as Map.h/Map.cpp will include IMapObject.h
-class Map;
+class IMap;
 
 /**
  * IMapObject describes a single object on the map
@@ -17,7 +17,7 @@ class IMapObject {
      * set_map will be called when an object is added to the map,
      * as some object might want to talk with other objects.
      */
-    virtual void set_map(Map* map) = 0;
+    virtual void set_map(IMap* map) = 0;
 
     /**
      * update will be called by the map object every frame

@@ -4,12 +4,12 @@
 
 #include <memory>
 
-void Map::init() {
+void MapWithSDL::init() {
     m_window.init();
     add_view(std::move(m_window.create_mapview()));
 }
 
-void Map::loop() {
+void MapWithSDL::loop() {
     uint32_t frame_time = 1000 / 60;
 
     while (m_window.is_running()) {
@@ -24,24 +24,6 @@ void Map::loop() {
     }
 }
 
-void Map::add(std::unique_ptr<IMapObject> object) {
-    object->set_map(this);
-    m_objects.push_back(std::move(object));
-}
-
-void Map::add(IMapObject* object) {
-    object->set_map(this);
-    m_objects.emplace_back(object);
-}
-
-void Map::render() {
-    for (auto const& view : m_views) {
-        view->before_render();
-        for (auto const& obj : m_objects) view->render(obj.get());
-        view->after_render();
-    }
-}
-
-void Map::update() {
-    for (auto const& obj : m_objects) obj->update();
+SDL_Texture* MapWithSDL::load_texture(char const* file, int* w, int* h) {
+    return m_window.load_texture(file, w, h);
 }

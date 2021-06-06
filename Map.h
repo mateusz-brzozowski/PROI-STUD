@@ -4,76 +4,55 @@
 #include <memory>
 #include <vector>
 
+#include "IMap.h"
 #include "IMapObject.h"
 #include "IMapView.h"
 #include "Window.h"
 
 /**
- * Map is a central object that manages every object on given map
- * and handles connections to objects that view the map and can provide
- * some events back to the map.
+ * Map is an implementation of the IMap interface
+ * with the help of SDL.
  */
-class Map {
-   private:
-    /// Vector of elements on this map
-    std::vector<std::unique_ptr<IMapObject>> m_objects;
-
-    /// Vector of all views of this map
-    std::vector<std::unique_ptr<IMapView>> m_views;
-
+class MapWithSDL : public IMap {
+   protected:
     /// Window connencted to this map
     Window m_window{};
 
    public:
     /**
-     * Adds an object to the map and assumes ownership of that object.
+     * Initializes connections with the Window.
      */
-    void add(std::unique_ptr<IMapObject> object);
+    void init() override;
 
     /**
-     * Adds an object to the map and assumes ownership of that object.
-     * This overload will automatically wrap provided pointer into a
-     * std::unique_ptr, so that object will be automatically deallocated.
-     */
-    void add(IMapObject* object);
-
-    /**
-     * Attaches view to a map and assumes ownership of that view.
-     */
-    inline void add_view(std::unique_ptr<IMapView> view) {
-        m_views.push_back(std::move(view));
-    }
-
-    /**
-     * Initializes connections with all windows.
-     */
-    void init();
-
-    /**
-     * Runs and updates all objects as long as the main Window
+     * Runs and updates all objects as long as the Window
      * is running.
      */
-    void loop();
+    void loop() override;
 
     /**
-     * Updates all objects
+     * Loads a texture from a file, while also updating
+     * provided texture width and height,
+     * in the context of the attached window's renderer/
      */
-    void update();
+    SDL_Texture* load_texture(char const* file, int* w = nullptr,
+                              int* h = nullptr) override;
 
     /**
-     * Renders all objects on all views
+     * get_bounds() is a method to get the maximum allowed position
+     * of an object
      */
-    void render();
+    inline virtual Vector2D const get_bounds() override {
+        return {(double)m_window.get_width(), (double)m_window.get_height()};
+    };
 
     /**
-     * Returns a reference to the attached Window
+     * get_pressed_keys() is a method that is supposed to return a number
+     * encoding the information on key presses.
+     *
+     * See the KEY_* macros for values corresponding to particular keys.
      */
-    inline Window& get_window() { return m_window; }
-
-    /**
-     * Returns a reference to the list of objects
-     */
-    inline std::vector<std::unique_ptr<IMapObject>> const& get_objects() {
-        return m_objects;
+    inline unsigned char const get_pressed_keys() override {
+        return m_window.get_pressed_keys();
     }
 };

@@ -1,8 +1,8 @@
 #pragma once
 #include <SDL.h>
 
+#include "IMap.h"
 #include "IMapObject.h"
-#include "Map.h"
 
 /**
  * Object is an IMapObject representing a static, non-moving object
@@ -22,7 +22,7 @@ class Object : public IMapObject {
     RotatedRect m_position;
 
     /// Link to the underlying Map; required for texture loading
-    Map* m_map{nullptr};
+    IMap* m_map{nullptr};
 
    public:
     /**
@@ -39,7 +39,7 @@ class Object : public IMapObject {
      * Set a link to any Map. An Object without a Map will not be able
      * to load its Texture
      */
-    void set_map(Map* map) override;
+    void set_map(IMap* map) override;
 
     /**
      * No-op, since static Object by definition don't udpate
