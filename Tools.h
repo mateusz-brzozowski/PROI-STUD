@@ -21,6 +21,8 @@ struct Vector2D {
     double length() const;
     /// Rotate this vector by some angle (in radians)
     Vector2D& rotate(double angle);
+    /// Returns a new vector as a result of rotating this vector by some angle
+    Vector2D rotated(double angle) const;
     /// Normalize the vector, so that its length is 1.
     Vector2D& normalize();
     /// Euclidian distance between 2 points
@@ -65,8 +67,8 @@ class RotatedRect {
      * @param angle rotation of the rectangle (from the center point, in
      * radians)
      */
-    RotatedRect(Vector2D center, double width_half, double height_half,
-                double angle = 0)
+    RotatedRect(Vector2D center = {0, 0}, double width_half = 0,
+                double height_half = 0, double angle = 0)
         : m_center(std::move(center)),
           m_width_half(width_half),
           m_height_half(height_half),

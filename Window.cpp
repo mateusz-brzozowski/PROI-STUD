@@ -23,15 +23,38 @@ static unsigned char convert_keycode(SDL_Keycode k) {
     return 0;
 }
 
-void WindowRenderer::before_render() { SDL_RenderClear(m_attached_renderer); }
+bool WindowRenderer::init(SDL_Window* window) {
+    m_sdl_renderer = SDL_CreateRenderer(window, -1, 0);
+    if (!m_sdl_renderer) {
+        std::cerr << "Failed to create renderer: " << SDL_GetError() << '\n';
+        return false;
+    }
+
+    std::cerr << "Renderer created\n";
+    SDL_SetRenderDrawColor(m_sdl_renderer, 255, 255, 255, 255);
+    return true;
+}
+
+void WindowRenderer::before_render() { SDL_RenderClear(m_sdl_renderer); }
 
 void WindowRenderer::render(IMapObject* object) {
-    SDL_RenderCopyEx(m_attached_renderer, object->get_texture(), NULL,
+    SDL_RenderCopyEx(m_sdl_renderer, object->get_texture(), NULL,
                      object->get_texture_position(),
                      object->get_texture_rotation(), NULL, SDL_FLIP_NONE);
 }
 
-void WindowRenderer::after_render() { SDL_RenderPresent(m_attached_renderer); }
+void WindowRenderer::after_render() {
+    for (auto const& addon : m_addons) addon->render_on(m_sdl_renderer);
+    SDL_RenderPresent(m_sdl_renderer);
+}
+
+void WindowRenderer::clean() {
+    if (m_sdl_renderer) {
+        std::cerr << "Destroying renderer\n";
+        SDL_DestroyRenderer(m_sdl_renderer);
+        m_sdl_renderer = nullptr;
+    }
+}
 
 Window::~Window() { clean(); }
 
@@ -60,17 +83,14 @@ void Window::init(const char* title, int width, int height, bool fullscreen) {
         m_height = height;
 
         // Add a renderer to the new window
-        m_renderer = SDL_CreateRenderer(m_sdl_window, -1, 0);
+        m_renderer.reset(new WindowRenderer);
 
-        if (!m_renderer) {
-            std::cerr << "Failed to create renderer: " << SDL_GetError()
-                      << '\n';
-            return;
+        // Initialize the renderer - and only if it succeeds we can say
+        // the loop is actually running
+        if (m_renderer->init(m_sdl_window)) {
+            m_is_running = true;
         }
 
-        std::cerr << "Renderer created\n";
-        SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
-        m_is_running = true;
     } else {
         std::cerr << "Failed to initialize SDL: " << SDL_GetError() << '\n';
     }
@@ -86,7 +106,8 @@ SDL_Texture* Window::load_texture(const char* file, int* w, int* h) {
     }
 
     // Create a texture from that surface
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, tmp_surf);
+    SDL_Texture* texture =
+        SDL_CreateTextureFromSurface(m_renderer->get_renderer(), tmp_surf);
 
     if (!texture) {
         std::cerr << "Failed to create texture: " << SDL_GetError() << '\n';
@@ -122,11 +143,7 @@ void Window::handleEvents() {
 }
 
 void Window::clean() {
-    if (m_renderer) {
-        std::cerr << "Destroying renderer\n";
-        SDL_DestroyRenderer(m_renderer);
-        m_renderer = NULL;
-    }
+    if (m_renderer) m_renderer->clean();
 
     if (m_sdl_window) {
         std::cerr << "Destroying window\n";

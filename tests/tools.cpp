@@ -21,10 +21,10 @@ testing::AssertionResult VectorNear(Vector2D const v1, Vector2D const v2,
     return testing::AssertionSuccess();
 }
 
-// TODO: Test project_points()
-// TODO: Test RotatedRect::collides()
-// TODO: Test RotatedRect::update_sdl_rect_position()
-// TODO: Test RotatedRect::angle_deg()
+/// TODO: Test project_points()
+/// TODO: Test RotatedRect::collides()
+/// TODO: Test RotatedRect::update_sdl_rect_position()
+/// TODO: Test RotatedRect::angle_deg()
 
 TEST(Clamp, int) {
     EXPECT_EQ(CLAMP(-5, 0, 100), 0);
@@ -150,6 +150,7 @@ TEST(IntervalsOverlap, normal) {
     EXPECT_TRUE(intervals_overlap({1, 3}, {2, 4}));
     EXPECT_TRUE(intervals_overlap({2, 4}, {1, 3}));
     EXPECT_TRUE(intervals_overlap({-5, 5}, {-10, -2}));
+    EXPECT_TRUE(intervals_overlap({5, 5}, {0, 5}));
 
     EXPECT_FALSE(intervals_overlap({1, 3}, {4, 6}));
     EXPECT_FALSE(intervals_overlap({-5, -2}, {-1, 5}));
