@@ -150,8 +150,8 @@ TEST(IntervalsOverlap, normal) {
     EXPECT_TRUE(intervals_overlap({1, 3}, {2, 4}));
     EXPECT_TRUE(intervals_overlap({2, 4}, {1, 3}));
     EXPECT_TRUE(intervals_overlap({-5, 5}, {-10, -2}));
-    EXPECT_TRUE(intervals_overlap({5, 5}, {0, 5}));
 
+    EXPECT_FALSE(intervals_overlap({5, 5}, {0, 5}));
     EXPECT_FALSE(intervals_overlap({1, 3}, {4, 6}));
     EXPECT_FALSE(intervals_overlap({-5, -2}, {-1, 5}));
 }
