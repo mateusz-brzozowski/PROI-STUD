@@ -3,8 +3,11 @@
 
 #include <memory>
 #include <unordered_set>
+#include <vector>
 
+#include "Car.h"
 #include "IMapView.h"
+#include "IRenderAddon.h"
 
 /**
  * WindowRenderer implements the IMapView protocol,
@@ -14,13 +17,19 @@
  */
 class WindowRenderer : public IMapView {
    private:
-    SDL_Renderer*& m_attached_renderer;
+    SDL_Renderer* m_sdl_renderer{nullptr};
+    std::vector<IRenderAddon*> m_addons{};
 
    public:
-    WindowRenderer(SDL_Renderer*& renderer) : m_attached_renderer(renderer) {}
+    bool init(SDL_Window*);
     void before_render() override;
     void render(IMapObject*) override;
     void after_render() override;
+    void clean();
+
+    inline SDL_Renderer* get_renderer() { return m_sdl_renderer; }
+    inline void add_addon(IRenderAddon* addon) { m_addons.push_back(addon); }
+    inline std::vector<IRenderAddon*> const& get_addons() { return m_addons; }
 };
 
 /**
@@ -29,7 +38,7 @@ class WindowRenderer : public IMapView {
 class Window {
    private:
     SDL_Window* m_sdl_window{nullptr};
-    SDL_Renderer* m_renderer{nullptr};
+    std::shared_ptr<WindowRenderer> m_renderer{nullptr};
     unsigned char m_pressed_keys{0};
     int m_width{-1};
     int m_height{-1};
@@ -63,16 +72,11 @@ class Window {
      */
     void clean();
 
-    /**
-     * Creates a WindowRenderer attached to this Window
-     */
-    inline std::shared_ptr<IMapView> create_mapview() {
-        return std::shared_ptr<IMapView>(new WindowRenderer(m_renderer));
+    inline std::shared_ptr<WindowRenderer> get_renderer() const {
+        return m_renderer;
     }
-
-    inline SDL_Renderer* get_renderer() { return m_renderer; }
-    inline int get_width() { return m_width; }
-    inline int get_height() { return m_height; }
+    inline int get_width() const { return m_width; }
+    inline int get_height() const { return m_height; }
     inline unsigned char const get_pressed_keys() { return m_pressed_keys; }
-    inline bool is_running() { return m_is_running; }
+    inline bool is_running() const { return m_is_running; }
 };

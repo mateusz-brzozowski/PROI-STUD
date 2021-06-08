@@ -28,6 +28,13 @@ Vector2D& Vector2D::rotate(double angle) {
     return *this;
 }
 
+Vector2D Vector2D::rotated(double angle) const {
+    double angle_sin = std::sin(angle);
+    double angle_cos = std::cos(angle);
+
+    return {x * angle_cos - y * angle_sin, x * angle_sin + y * angle_cos};
+}
+
 Vector2D& Vector2D::normalize() {
     double tmp_length = length();
     if (tmp_length > 0) {
@@ -63,14 +70,14 @@ Vector2D project_points(std::vector<Vector2D> const& points,
 }
 
 bool intervals_overlap(Vector2D const& i1, Vector2D const& i2) {
-    return i1.x < i2.x ? i2.x <= i1.y : i1.x <= i2.y;
+    return i1.x < i2.x ? i2.x < i1.y : i1.x < i2.y;
 }
 
 std::vector<Vector2D> RotatedRect::vertices() const {
     return {m_center + Vector2D{m_width_half, m_height_half}.rotate(m_angle),
             m_center + Vector2D{m_width_half, -m_height_half}.rotate(m_angle),
-            m_center + Vector2D{-m_width_half, m_height_half}.rotate(m_angle),
-            m_center + Vector2D{-m_width_half, -m_height_half}.rotate(m_angle)};
+            m_center + Vector2D{-m_width_half, -m_height_half}.rotate(m_angle),
+            m_center + Vector2D{-m_width_half, m_height_half}.rotate(m_angle)};
 }
 
 std::vector<Vector2D> RotatedRect::edge_axes() const {

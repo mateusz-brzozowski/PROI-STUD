@@ -1,8 +1,12 @@
 #pragma once
 #include <SDL.h>
 
+#include <array>
+
 #include "IMap.h"
 #include "IMapObject.h"
+#include "IMapView.h"
+#include "IRenderAddon.h"
 #include "Tools.h"
 
 /**
@@ -42,12 +46,15 @@ class Car : public IMapObject {
     void update() override;
 
     SDL_Texture* get_texture() override;
+
     inline SDL_Rect* get_texture_position() override {
         return &m_texture_position;
     }
+
     inline double get_texture_rotation() override {
         return m_position.angle_deg();
     }
+
     inline RotatedRect* get_bbox() override { return &m_position; }
 };
 
@@ -55,8 +62,22 @@ class Car : public IMapObject {
  * AutonomousCar is an extension to the Car class,
  * that provides an autonomous car, which follows another Car.
  */
-class AutonomousCar : public Car {
+class AutonomousCar : public Car, public IRenderAddon {
    protected:
+    // --- sub-classes --- ///
+
+    struct Sensor {
+        Vector2D const center_offset;
+        double const angle_offset;
+        double const avoid_factor;
+        RotatedRect bbox{{0, 0}, 18, 1};
+
+        Sensor(Vector2D co = {0, 0}, double ao = 0, double af = 0, int ofi = 0)
+            : center_offset(co), angle_offset(ao), avoid_factor(af) {}
+    };
+
+    // --- attributes --- //
+
     /// The car to follow
     IMapObject* m_target;
 
@@ -66,11 +87,30 @@ class AutonomousCar : public Car {
     /// Name of the BMP with a given texture
     static constexpr char const* m_texture_file = "images/car2.bmp";
 
+    /// List of sensors
+    /// FIXME: Hardcoded offsets (for texture size 18x18)
+    std::array<Sensor, 5> m_sensors{
+        Sensor{{27, 0}, 0, 1},          // Front sensor
+        Sensor{{27, 9}, 0, -1},         // Right-Front sensor
+        Sensor{{22, 21}, M_PI_4, -.5},  // Right-Corner sensor
+        Sensor{{27, -9}, 0, 1},         // Left-Front Sensor
+        Sensor{{22, -21}, -M_PI_4, .5}  // Left-Corner sensor
+    };
+
+    /// Car is performing an avoidance manover
+    bool m_avoiding{false};
+
+    // --- protected methods --- //
+
+    RotatedRect* sensor_collides(Sensor&);
+    void update_sensor_pos();
+
    public:
     AutonomousCar(Vector2D start_position, IMapObject* target,
-                  double speed = 150.0, double angle = 0)
+                  double speed = 1.0, double angle = 0)
         : Car(start_position, angle), m_target(target), m_speed(speed) {}
 
     SDL_Texture* get_texture() override;
     void update() override;
+    void render_on(SDL_Renderer*) override;
 };

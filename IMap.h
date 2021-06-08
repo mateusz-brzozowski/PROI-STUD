@@ -25,6 +25,7 @@
  * implementations of update() and render().
  */
 class IMap {
+   public:
     using objects_t = std::vector<std::shared_ptr<IMapObject>>;
     using views_t = std::vector<std::shared_ptr<IMapView>>;
 

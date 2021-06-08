@@ -55,4 +55,10 @@ class MapWithSDL : public IMap {
     inline unsigned char const get_pressed_keys() override {
         return m_window.get_pressed_keys();
     }
+
+    /**
+     * get_window() is a special method,
+     * to get the underlaying Window class.
+     */
+    inline Window const& get_window() { return m_window; }
 };

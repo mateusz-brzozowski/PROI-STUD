@@ -8,6 +8,7 @@
 #include <cmath>
 #include <iostream>
 
+#include "Car.h"
 #include "IMap.h"
 #include "Tools.h"
 
@@ -66,16 +67,55 @@ SDL_Texture* Car::get_texture() {
     return m_texture;
 }
 
-void AutonomousCar::update() {
-    Vector2D& target_pos = m_target->get_bbox()->m_center;
+RotatedRect* AutonomousCar::sensor_collides(Sensor& sensor) {
+    for (auto& o : m_map->get_objects())
+        if (o.get() != m_target && o.get() != this &&
+            sensor.bbox.collides(*o->get_bbox()))
+            return o->get_bbox();
+    return nullptr;
+}
 
-    if (target_pos.distance(m_position.m_center) > 30) {
-        Vector2D direction = target_pos - m_position.m_center;
-        m_position.m_angle = atan2(direction.y, direction.x);
-        direction.normalize();
-        validate_new_position(m_position.m_center +
-                              (direction * (m_speed * 1 / 60)));
+void AutonomousCar::update_sensor_pos() {
+    for (auto& s : m_sensors) {
+        s.bbox.m_center =
+            m_position.m_center + s.center_offset.rotated(m_position.m_angle);
+        s.bbox.m_angle = m_position.m_angle + s.angle_offset;
     }
+}
+
+void AutonomousCar::update() {
+    update_sensor_pos();
+
+    // Detect collisions
+    double avoid_factor = 0;
+
+    for (auto& sensor : m_sensors) {
+        if (sensor_collides(sensor)) {
+            avoid_factor += sensor.avoid_factor;
+        }
+    }
+
+    // Move
+    Vector2D new_pos = m_position.m_center;
+    new_pos.y += sin(m_position.m_angle) * m_speed;
+    new_pos.x += cos(m_position.m_angle) * m_speed;
+
+    // Rotate wheels
+    if (avoid_factor) {
+        m_position.m_angle += M_PI / 36 * avoid_factor;
+    } else {
+        Vector2D target_pos = m_target->get_bbox()->m_center;
+
+        if (target_pos.distance(m_position.m_center) < 30) return;
+
+        Vector2D direction = target_pos - m_position.m_center;
+        double angle_to_target =
+            m_position.m_angle - atan2(direction.y, direction.x);
+        m_position.m_angle +=
+            m_speed * (std::sin(angle_to_target) < 0 ? .03 : -.03);
+    }
+
+    validate_new_position(new_pos);
 }
 
 SDL_Texture* AutonomousCar::get_texture() {
@@ -93,4 +133,23 @@ SDL_Texture* AutonomousCar::get_texture() {
     }
 
     return m_texture;
+}
+
+void AutonomousCar::render_on(SDL_Renderer* renderer) {
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+
+    for (auto const& sensor : m_sensors) {
+        auto sensor_pts = sensor.bbox.vertices();
+        SDL_FPoint pts[5];
+
+        for (int i = 0; i < 5; ++i)
+            pts[i] = {
+                (float)sensor_pts.at(i % 4).x,
+                (float)sensor_pts.at(i % 4).y,
+            };
+
+        SDL_RenderDrawLinesF(renderer, pts, 5);
+    }
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }

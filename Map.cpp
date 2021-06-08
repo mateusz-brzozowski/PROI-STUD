@@ -6,7 +6,7 @@
 
 void MapWithSDL::init() {
     m_window.init();
-    add_view(std::move(m_window.create_mapview()));
+    add_view(std::move(m_window.get_renderer()));
 }
 
 void MapWithSDL::loop() {
