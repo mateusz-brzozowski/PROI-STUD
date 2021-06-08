@@ -160,14 +160,14 @@ TEST(RotatedRect, vertices) {
     auto points = RotatedRect({2, 2}, 1, 1, 0).vertices();
     EXPECT_TRUE(VectorNear(points[0], {3, 3}));
     EXPECT_TRUE(VectorNear(points[1], {3, 1}));
-    EXPECT_TRUE(VectorNear(points[2], {1, 3}));
-    EXPECT_TRUE(VectorNear(points[3], {1, 1}));
+    EXPECT_TRUE(VectorNear(points[2], {1, 1}));
+    EXPECT_TRUE(VectorNear(points[3], {1, 3}));
 
     points = RotatedRect({2, 2}, 1, 1, M_PI_4).vertices();
     EXPECT_TRUE(VectorNear(points[0], {2, 3.41421356}));
     EXPECT_TRUE(VectorNear(points[1], {3.41421356, 2}));
-    EXPECT_TRUE(VectorNear(points[2], {0.58578644, 2}));
-    EXPECT_TRUE(VectorNear(points[3], {2, 0.58578644}));
+    EXPECT_TRUE(VectorNear(points[2], {2, 0.58578644}));
+    EXPECT_TRUE(VectorNear(points[3], {0.58578644, 2}));
 }
 
 TEST(RotatedRect, edge_axes) {
