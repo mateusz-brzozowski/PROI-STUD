@@ -45,7 +45,7 @@ class Car : public IMapObject {
     void set_map(IMap* map) override;
     void update() override;
 
-    SDL_Texture* get_texture() override;
+    SDL_Texture* get_texture() override { return m_texture; }
 
     inline SDL_Rect* get_texture_position() override {
         return &m_texture_position;
@@ -110,7 +110,7 @@ class AutonomousCar : public Car, public IRenderAddon {
                   double speed = 1.0, double angle = 0)
         : Car(start_position, angle), m_target(target), m_speed(speed) {}
 
-    SDL_Texture* get_texture() override;
+    void set_map(IMap* map) override;
     void update() override;
     void render_on(SDL_Renderer*) override;
 };

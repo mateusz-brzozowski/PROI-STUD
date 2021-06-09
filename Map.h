@@ -7,10 +7,11 @@
 #include "IMap.h"
 #include "IMapObject.h"
 #include "IMapView.h"
+#include "Tools.h"
 #include "Window.h"
 
 /**
- * Map is an implementation of the IMap interface
+ * MapWithSDL is an implementation of the IMap interface
  * with the help of SDL.
  */
 class MapWithSDL : public IMap {
@@ -61,4 +62,26 @@ class MapWithSDL : public IMap {
      * to get the underlaying Window class.
      */
     inline Window const& get_window() { return m_window; }
+};
+
+/**
+ * MapNoGUI is a special implementation of the IMap interface
+ * that is not attached to any GUI/drawing system.
+ *
+ * This class is used to allow automated tests of objects
+ * that need to be attached to some map.
+ */
+class MapNoGui : public IMap {
+   private:
+    unsigned char m_pressed_keys{0};
+    unsigned m_max_iterations{1000000};
+
+   public:
+    MapNoGui(int max_iterations = -1) : m_max_iterations(max_iterations) {}
+    void loop() override;
+    virtual SDL_Texture* load_texture(char const* file, int* w = nullptr,
+                                      int* h = nullptr) override;
+    inline Vector2D const get_bounds() override { return {800, 600}; }
+    inline unsigned char const get_pressed_keys() { return m_pressed_keys; }
+    inline void set_pressed_keys(unsigned char mask) { m_pressed_keys = mask; }
 };

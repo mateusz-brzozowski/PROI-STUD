@@ -9,6 +9,7 @@
 
 int main(int argc, const char* argv[]) {
     MapWithSDL m{};
+    m.init();
 
     auto main_car = new Car({200, 200});
     auto autonomous_car = new AutonomousCar({20, 200}, main_car);
@@ -20,7 +21,6 @@ int main(int argc, const char* argv[]) {
     m.add(new Bus({150, 200}));
     m.add(new Bush({300, 200}));
 
-    m.init();
     m.get_window().get_renderer()->add_addon(autonomous_car);
     m.loop();
     return 0;
