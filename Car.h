@@ -65,12 +65,13 @@ class Car : public IMapObject {
 class AutonomousCar : public Car, public IRenderAddon {
    protected:
     // --- sub-classes --- ///
+    static constexpr int sensor_lenght_half = 18;
 
     struct Sensor {
         Vector2D const center_offset;
         double const angle_offset;
         double const avoid_factor;
-        RotatedRect bbox{{0, 0}, 18, 1};
+        RotatedRect bbox{{0, 0}, sensor_lenght_half, 0.5};
 
         Sensor(Vector2D co = {0, 0}, double ao = 0, double af = 0, int ofi = 0)
             : center_offset(co), angle_offset(ao), avoid_factor(af) {}
@@ -88,14 +89,7 @@ class AutonomousCar : public Car, public IRenderAddon {
     static constexpr char const* m_texture_file = "images/car2.bmp";
 
     /// List of sensors
-    /// FIXME: Hardcoded offsets (for texture size 18x18)
-    std::array<Sensor, 5> m_sensors{
-        Sensor{{27, 0}, 0, 1},          // Front sensor
-        Sensor{{27, 9}, 0, -1},         // Right-Front sensor
-        Sensor{{22, 21}, M_PI_4, -.5},  // Right-Corner sensor
-        Sensor{{27, -9}, 0, 1},         // Left-Front Sensor
-        Sensor{{22, -21}, -M_PI_4, .5}  // Left-Corner sensor
-    };
+    std::vector<Sensor> m_sensors{};
 
     /// Car is performing an avoidance manover
     bool m_avoiding{false};
@@ -104,6 +98,7 @@ class AutonomousCar : public Car, public IRenderAddon {
 
     RotatedRect* sensor_collides(Sensor&);
     void update_sensor_pos();
+    void initialize_sensors();
 
    public:
     AutonomousCar(Vector2D start_position, IMapObject* target,
