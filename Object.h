@@ -44,16 +44,12 @@ class Object : public IMapObject {
     /**
      * No-op, since static Object by definition don't udpate
      */
-    void update() override;
+    void update() override {}
 
-    SDL_Texture* get_texture() override;
-    inline SDL_Rect* get_texture_position() override {
-        return &m_texture_position;
-    }
-    inline double get_texture_rotation() override {
-        return m_position.angle_deg();
-    }
-    inline RotatedRect const* get_bbox() const override { return &m_position; }
+    SDL_Texture* get_texture() override { return m_texture; }
+    SDL_Rect* get_texture_position() override { return &m_texture_position; }
+    double get_texture_rotation() override { return m_position.angle_deg(); }
+    RotatedRect const* get_bbox() const override { return &m_position; }
 };
 
 /**

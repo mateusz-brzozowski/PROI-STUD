@@ -43,7 +43,7 @@ class MapWithSDL : public IMap {
      * get_bounds() is a method to get the maximum allowed position
      * of an object
      */
-    inline virtual Vector2D const get_bounds() override {
+    Vector2D const get_bounds() override {
         return {(double)m_window.get_width(), (double)m_window.get_height()};
     };
 
@@ -53,7 +53,7 @@ class MapWithSDL : public IMap {
      *
      * See the KEY_* macros for values corresponding to particular keys.
      */
-    inline unsigned char const get_pressed_keys() override {
+    unsigned char const get_pressed_keys() override {
         return m_window.get_pressed_keys();
     }
 
@@ -61,7 +61,7 @@ class MapWithSDL : public IMap {
      * get_window() is a special method,
      * to get the underlaying Window class.
      */
-    inline Window const& get_window() { return m_window; }
+    Window const& get_window() { return m_window; }
 };
 
 /**
@@ -79,9 +79,9 @@ class MapNoGui : public IMap {
    public:
     MapNoGui(int max_iterations = -1) : m_max_iterations(max_iterations) {}
     void loop() override;
-    virtual SDL_Texture* load_texture(char const* file, int* w = nullptr,
-                                      int* h = nullptr) override;
-    inline Vector2D const get_bounds() override { return {800, 600}; }
-    inline unsigned char const get_pressed_keys() { return m_pressed_keys; }
-    inline void set_pressed_keys(unsigned char mask) { m_pressed_keys = mask; }
+    SDL_Texture* load_texture(char const* file, int* w = nullptr,
+                              int* h = nullptr) override;
+    Vector2D const get_bounds() override { return {800, 600}; }
+    unsigned char const get_pressed_keys() { return m_pressed_keys; }
+    void set_pressed_keys(unsigned char mask) { m_pressed_keys = mask; }
 };

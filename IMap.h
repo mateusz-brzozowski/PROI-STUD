@@ -44,7 +44,7 @@ class IMap {
     /**
      * Add an IMapObject to the map.
      */
-    inline virtual void add(std::shared_ptr<IMapObject> o) {
+    virtual void add(std::shared_ptr<IMapObject> o) {
         o->set_map(this);
         m_objects.push_back(std::move(o));
     }
@@ -53,7 +53,7 @@ class IMap {
      * Add an IMapObject to the map.
      * This overload will immediately wrap the argument in a shared_ptr.
      */
-    inline virtual void add(IMapObject* o) {
+    virtual void add(IMapObject* o) {
         o->set_map(this);
         m_objects.emplace_back(o);
     }
@@ -61,14 +61,14 @@ class IMap {
     /**
      * Get the list of all attached objects
      */
-    inline virtual objects_t const& get_objects() { return m_objects; }
+    virtual objects_t const& get_objects() { return m_objects; }
 
     //~~~ View-related methods ~~~//
 
     /**
      * Add an IMapView to the map.
      */
-    inline virtual void add_view(std::shared_ptr<IMapView> o) {
+    virtual void add_view(std::shared_ptr<IMapView> o) {
         m_views.push_back(std::move(o));
     }
 
@@ -76,12 +76,12 @@ class IMap {
      * Add an IMapView to the map.
      * This overload will immediately wrap the argument in a shared_ptr.
      */
-    inline virtual void add_view(IMapView* o) { m_views.emplace_back(o); }
+    virtual void add_view(IMapView* o) { m_views.emplace_back(o); }
 
     /**
      * Get the list of all attached views
      */
-    inline virtual views_t const& get_views() { return m_views; }
+    virtual views_t const& get_views() { return m_views; }
 
     //~~~ Main methods ~~~//
 
@@ -134,7 +134,7 @@ class IMap {
      * get_bounds() is a method to get the maximum allowed position
      * of an object
      */
-    inline virtual Vector2D const get_bounds() { return {-1, -1}; };
+    virtual Vector2D const get_bounds() { return {-1, -1}; };
 
     /**
      * get_pressed_keys() is a method that is supposed to return a number
@@ -142,5 +142,5 @@ class IMap {
      *
      * See the KEY_* macros for values corresponding to particular keys.
      */
-    inline virtual unsigned char const get_pressed_keys() { return 0; }
+    virtual unsigned char const get_pressed_keys() { return 0; }
 };

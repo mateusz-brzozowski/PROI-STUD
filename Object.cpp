@@ -19,7 +19,3 @@ void Object::set_map(IMap* map) {
     // Save texture position
     m_position.update_sdl_rect_position(&m_texture_position);
 }
-
-void Object::update() {}
-
-SDL_Texture* Object::get_texture() { return m_texture; }
