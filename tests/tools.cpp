@@ -21,10 +21,6 @@ testing::AssertionResult VectorNear(Vector2D const v1, Vector2D const v2,
     return testing::AssertionSuccess();
 }
 
-/// TODO: Test project_points()
-/// TODO: Test RotatedRect::collides()
-/// TODO: Test RotatedRect::update_sdl_rect_position()
-/// TODO: Test RotatedRect::angle_deg()
 
 TEST(Clamp, int) {
     EXPECT_EQ(CLAMP(-5, 0, 100), 0);
@@ -178,4 +174,55 @@ TEST(RotatedRect, edge_axes) {
     edge_axes = RotatedRect({2, 2}, 1, 1, M_PI_4).edge_axes();
     EXPECT_TRUE(VectorNear(edge_axes[0], {.70710678, .70710678}));
     EXPECT_TRUE(VectorNear(edge_axes[1], {-.70710678, .70710678}));
+}
+
+TEST(RotatedRect, angle_deg) {
+    auto angle = RotatedRect({2, 2}, 1, 1, M_PI_2).angle_deg();
+    EXPECT_EQ(angle, 90);
+
+    angle = RotatedRect({2, 2}, 1, 1, M_PI_4).angle_deg();
+    EXPECT_EQ(angle, 45);
+}
+
+TEST(RotatedRect, update_sdl_rect_position) {
+    SDL_Rect sdl_rect{20, 20, 0, 0};
+    auto rect = RotatedRect({7, 3}, 1, 2);
+    rect.update_sdl_rect_position(&sdl_rect);
+    EXPECT_EQ(sdl_rect.x, 6);
+    EXPECT_EQ(sdl_rect.y, 1);
+
+    sdl_rect = SDL_Rect{20, 20, 4, 2};
+    rect = RotatedRect({8, 4}, 3, 4);
+    rect.update_sdl_rect_position(&sdl_rect);
+    EXPECT_EQ(sdl_rect.x, 5);
+    EXPECT_EQ(sdl_rect.y, 0);
+}
+
+TEST(RotatedRect, project_points_) {
+    auto points = RotatedRect({2, 2}, 1, 1).vertices();
+    Vector2D axis1 = {1, 0};
+    Vector2D interval1 = project_points(points, axis1);
+    EXPECT_EQ(interval1.x, 1);
+    EXPECT_EQ(interval1.y, 3);
+
+    Vector2D axis2 = {0, 1};
+    Vector2D interval2 = project_points(points, axis2);
+    EXPECT_EQ(interval2.x, 1);
+    EXPECT_EQ(interval2.y, 3);
+}
+
+TEST(RotatedRect, collides) {
+    auto rect1 = RotatedRect({2, 2}, 1, 1);
+
+    auto rect2 = RotatedRect({4, 4}, 1, 1);
+    EXPECT_TRUE(rect1.collides(rect2));
+
+    rect2 = RotatedRect({5, 5}, 1, 1);
+    EXPECT_FALSE(rect1.collides(rect2));
+
+    rect2 = RotatedRect({4, 4}, 2, 2, M_PI_4);
+    EXPECT_TRUE(rect1.collides(rect2));
+
+    rect2 = RotatedRect({4, 2}, 1, 1);
+    EXPECT_TRUE(rect1.collides(rect2));
 }
