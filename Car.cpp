@@ -63,7 +63,7 @@ void Car::update() {
                           Vector2D{distance, 0}.rotate(m_position.m_angle));
 }
 
-RotatedRect* AutonomousCar::sensor_collides(Sensor& sensor) {
+RotatedRect const* AutonomousCar::sensor_collides(Sensor const& sensor) const {
     for (auto& o : m_map->get_objects())
         if (o.get() != m_target && o.get() != this &&
             sensor.bbox.collides(*o->get_bbox()))
@@ -150,7 +150,7 @@ void AutonomousCar::render_on(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
 
-void AutonomousCar::initialize_sensors() { 
+void AutonomousCar::initialize_sensors() {
     m_sensors.reserve(5);
     double front_offset = sensor_lenght_half + m_position.m_width_half;
     double angle_offset = sensor_lenght_half * M_SQRT1_2;

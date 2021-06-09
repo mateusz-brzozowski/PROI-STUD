@@ -55,7 +55,7 @@ class Car : public IMapObject {
         return m_position.angle_deg();
     }
 
-    inline RotatedRect* get_bbox() override { return &m_position; }
+    inline RotatedRect const* get_bbox() const override { return &m_position; }
 };
 
 /**
@@ -96,7 +96,7 @@ class AutonomousCar : public Car, public IRenderAddon {
 
     // --- protected methods --- //
 
-    RotatedRect* sensor_collides(Sensor&);
+    RotatedRect const* sensor_collides(Sensor const&) const;
     void update_sensor_pos();
     void initialize_sensors();
 

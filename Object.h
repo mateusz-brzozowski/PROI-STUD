@@ -53,7 +53,7 @@ class Object : public IMapObject {
     inline double get_texture_rotation() override {
         return m_position.angle_deg();
     }
-    inline RotatedRect* get_bbox() override { return &m_position; }
+    inline RotatedRect const* get_bbox() const override { return &m_position; }
 };
 
 /**

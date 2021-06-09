@@ -45,7 +45,7 @@ class IMapObject {
      * get_bbox() should return a pointer to a RotatedRect,
      * which will be treadted as a bounding box for collision detection.
      */
-    virtual RotatedRect* get_bbox() = 0;
+    virtual RotatedRect const* get_bbox() const = 0;
 
     /**
      * Checks if some IMapObject is a different from another one
