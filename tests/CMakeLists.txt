@@ -8,7 +8,7 @@ else()
     include_directories(${GTest_INCLUDE_DIRS})
 endif()
 
-add_executable(proi_auto_tests tools.cpp scenarios.cpp)
+add_executable(proi_auto_tests car.cpp tools.cpp scenarios.cpp)
 target_link_libraries(proi_auto_tests PRIVATE ${GTest_LIBRARIES} ${SDL2_LIBRARIES})
 target_link_libraries(proi_auto_tests PRIVATE proi_auto_logic)
 gtest_discover_tests(proi_auto_tests)
