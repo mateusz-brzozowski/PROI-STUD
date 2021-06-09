@@ -21,7 +21,6 @@ testing::AssertionResult VectorNear(Vector2D const v1, Vector2D const v2,
     return testing::AssertionSuccess();
 }
 
-
 TEST(Clamp, int) {
     EXPECT_EQ(CLAMP(-5, 0, 100), 0);
     EXPECT_EQ(CLAMP(200, 0, 100), 100);
@@ -185,17 +184,17 @@ TEST(RotatedRect, angle_deg) {
 }
 
 TEST(RotatedRect, update_sdl_rect_position) {
-    SDL_Rect sdl_rect{20, 20, 0, 0};
+    SDL_FRect sdl_rect{20, 20, 0, 0};
     auto rect = RotatedRect({7, 3}, 1, 2);
     rect.update_sdl_rect_position(&sdl_rect);
-    EXPECT_EQ(sdl_rect.x, 6);
-    EXPECT_EQ(sdl_rect.y, 1);
+    EXPECT_NEAR(sdl_rect.x, 6, 1e-6);
+    EXPECT_NEAR(sdl_rect.y, 1, 1e-6);
 
-    sdl_rect = SDL_Rect{20, 20, 4, 2};
+    sdl_rect = SDL_FRect{20, 20, 4, 2};
     rect = RotatedRect({8, 4}, 3, 4);
     rect.update_sdl_rect_position(&sdl_rect);
-    EXPECT_EQ(sdl_rect.x, 5);
-    EXPECT_EQ(sdl_rect.y, 0);
+    EXPECT_NEAR(sdl_rect.x, 5, 1e-6);
+    EXPECT_NEAR(sdl_rect.y, 0, 1e-6);
 }
 
 TEST(RotatedRect, project_points_) {
