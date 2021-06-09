@@ -21,7 +21,6 @@ testing::AssertionResult VectorNear(Vector2D const v1, Vector2D const v2,
     return testing::AssertionSuccess();
 }
 
-/// TODO: Test project_points()
 
 TEST(Clamp, int) {
     EXPECT_EQ(CLAMP(-5, 0, 100), 0);
