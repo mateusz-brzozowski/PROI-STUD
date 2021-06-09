@@ -14,7 +14,7 @@ na pozostałych platformach.
 Lista wymaganych pakietów
 
 ### Windows (vcpkg)
-`vcpkg install googletest:x64-windows sdl2:x64-windows`
+`vcpkg install gtest:x64-windows sdl2:x64-windows`
 
 ### Debian/Ubuntu
 `sudo apt install googletest libsdl2-dev`
