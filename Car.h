@@ -29,6 +29,12 @@ class Car : public IMapObject {
     /// Name of the BMP with a given texture
     static constexpr char const* m_texture_file = "images/car.bmp";
 
+   public:
+    Car(Vector2D start_position, double angle = 0)
+        : m_position(start_position, 0, 0, angle) {}
+    void set_map(IMap* map) override;
+    void update() override;
+
     /**
      * validate_new_position() first checks if the new position is within the
      * bound of the Map, then checks if the new position collides with any other
@@ -38,12 +44,6 @@ class Car : public IMapObject {
      * actually moved
      */
     bool validate_new_position(Vector2D);
-
-   public:
-    Car(Vector2D start_position, double angle = 0)
-        : m_position(start_position, 0, 0, angle) {}
-    void set_map(IMap* map) override;
-    void update() override;
 
     SDL_Texture* get_texture() override { return m_texture; }
     SDL_FRect* get_texture_position() override { return &m_texture_position; }

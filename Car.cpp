@@ -28,6 +28,13 @@ void Car::set_map(IMap* map) {
 }
 
 bool Car::validate_new_position(Vector2D temp_pos) {
+    // Fast path for when m_map is not set
+    if (!m_map) {
+        std::swap(m_position.m_center, temp_pos);
+        m_position.update_sdl_rect_position(&m_texture_position);
+        return true;
+    }
+
     // Clamp within Map bounds
     Vector2D bounds = m_map->get_bounds() - Vector2D{9, 9};
 
