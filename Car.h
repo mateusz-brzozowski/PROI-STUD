@@ -18,7 +18,7 @@ class Car : public IMapObject {
     SDL_Texture* m_texture{nullptr};
 
     /// Position of this car's texture
-    SDL_Rect m_texture_position{0, 0, 0, 0};
+    SDL_FRect m_texture_position{0, 0, 0, 0};
 
     /// Position of the car
     RotatedRect m_position;
@@ -46,7 +46,7 @@ class Car : public IMapObject {
     void update() override;
 
     SDL_Texture* get_texture() override { return m_texture; }
-    SDL_Rect* get_texture_position() override { return &m_texture_position; }
+    SDL_FRect* get_texture_position() override { return &m_texture_position; }
     double get_texture_rotation() override { return m_position.angle_deg(); }
     RotatedRect const* get_bbox() const override { return &m_position; }
 };

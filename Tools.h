@@ -93,10 +93,10 @@ class RotatedRect {
     bool collides(RotatedRect const&) const;
 
     /**
-     * Updates the `x` and `y` attributes of an SDL_Rect;
+     * Updates the `x` and `y` attributes of an SDL_FRect;
      * ignoring any rotation
      */
-    void update_sdl_rect_position(SDL_Rect*) const;
+    void update_sdl_rect_position(SDL_FRect*) const;
 
     /**
      * Returns the rotation angle in degrees

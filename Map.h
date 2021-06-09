@@ -36,8 +36,8 @@ class MapWithSDL : public IMap {
      * provided texture width and height,
      * in the context of the attached window's renderer/
      */
-    SDL_Texture* load_texture(char const* file, int* w = nullptr,
-                              int* h = nullptr) override;
+    SDL_Texture* load_texture(char const* file, float* w = nullptr,
+                              float* h = nullptr) override;
 
     /**
      * get_bounds() is a method to get the maximum allowed position
@@ -79,8 +79,8 @@ class MapNoGui : public IMap {
    public:
     MapNoGui(int max_iterations = -1) : m_max_iterations(max_iterations) {}
     void loop() override;
-    SDL_Texture* load_texture(char const* file, int* w = nullptr,
-                              int* h = nullptr) override;
+    SDL_Texture* load_texture(char const* file, float* w = nullptr,
+                              float* h = nullptr) override;
     Vector2D const get_bounds() override { return {800, 600}; }
     unsigned char const get_pressed_keys() { return m_pressed_keys; }
     void set_pressed_keys(unsigned char mask) { m_pressed_keys = mask; }

@@ -103,7 +103,7 @@ bool RotatedRect::collides(RotatedRect const& other) const {
     return true;
 }
 
-void RotatedRect::update_sdl_rect_position(SDL_Rect* r) const {
-    r->x = (int)(m_center.x - m_width_half);
-    r->y = (int)(m_center.y - m_height_half);
+void RotatedRect::update_sdl_rect_position(SDL_FRect* r) const {
+    r->x = (float)(m_center.x - m_width_half);
+    r->y = (float)(m_center.y - m_height_half);
 }

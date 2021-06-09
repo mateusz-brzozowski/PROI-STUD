@@ -30,10 +30,10 @@ class IMapObject {
     virtual SDL_Texture* get_texture() = 0;
 
     /**
-     * get_texture_position() should return an SDL_Rect* describing where
+     * get_texture_position() should return an SDL_FRect* describing where
      * on the screen to put the texture and how big is there texture
      */
-    virtual SDL_Rect* get_texture_position() = 0;
+    virtual SDL_FRect* get_texture_position() = 0;
 
     /**
      * get_texture_position() should return the angle in degrees

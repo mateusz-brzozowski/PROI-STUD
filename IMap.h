@@ -125,8 +125,8 @@ class IMap {
      * load_texture() is a method to load an SDL_Texture from a file,
      * while also saving the texture's dimensions.
      */
-    virtual SDL_Texture* load_texture(char const* file, int* w = nullptr,
-                                      int* h = nullptr) {
+    virtual SDL_Texture* load_texture(char const* file, float* w = nullptr,
+                                      float* h = nullptr) {
         return nullptr;
     };
 

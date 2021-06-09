@@ -25,7 +25,7 @@ void MapWithSDL::loop() {
     }
 }
 
-SDL_Texture* MapWithSDL::load_texture(char const* file, int* w, int* h) {
+SDL_Texture* MapWithSDL::load_texture(char const* file, float* w, float* h) {
     return m_window.load_texture(file, w, h);
 }
 
@@ -36,9 +36,9 @@ void MapNoGui::loop() {
     }
 }
 
-SDL_Texture* MapNoGui::load_texture(char const* file, int* w, int* h) {
-    int width = 32;
-    int height = 32;
+SDL_Texture* MapNoGui::load_texture(char const* file, float* w, float* h) {
+    float width = 32;
+    float height = 32;
 
     if (!std::strcmp(file, "images/car.bmp")) {
         width = 18;

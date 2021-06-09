@@ -38,9 +38,9 @@ bool WindowRenderer::init(SDL_Window* window) {
 void WindowRenderer::before_render() { SDL_RenderClear(m_sdl_renderer); }
 
 void WindowRenderer::render(IMapObject* object) {
-    SDL_RenderCopyEx(m_sdl_renderer, object->get_texture(), NULL,
-                     object->get_texture_position(),
-                     object->get_texture_rotation(), NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyExF(m_sdl_renderer, object->get_texture(), NULL,
+                      object->get_texture_position(),
+                      object->get_texture_rotation(), NULL, SDL_FLIP_NONE);
 }
 
 void WindowRenderer::after_render() {
@@ -96,7 +96,7 @@ void Window::init(const char* title, int width, int height, bool fullscreen) {
     }
 }
 
-SDL_Texture* Window::load_texture(const char* file, int* w, int* h) {
+SDL_Texture* Window::load_texture(const char* file, float* w, float* h) {
     // Load the BMP file
     SDL_Surface* tmp_surf = SDL_LoadBMP(file);
     if (!tmp_surf) {
@@ -115,8 +115,8 @@ SDL_Texture* Window::load_texture(const char* file, int* w, int* h) {
     }
 
     // Set the width and height
-    if (w) *w = tmp_surf->w;
-    if (h) *h = tmp_surf->h;
+    if (w) *w = (float)tmp_surf->w;
+    if (h) *h = (float)tmp_surf->h;
 
     // Deallocate the surface (it's not needed anymore), and
     // return a pointer to that allocated Texture.
