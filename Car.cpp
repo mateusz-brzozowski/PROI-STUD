@@ -152,20 +152,25 @@ void AutonomousCar::render_on(SDL_Renderer* renderer) {
 
 void AutonomousCar::initialize_sensors() {
     m_sensors.reserve(5);
-    double front_offset = sensor_lenght_half + m_position.m_width_half;
-    double angle_offset = sensor_lenght_half * M_SQRT1_2;
+    double front_offset = SENSOR_LEN_HALF + m_position.m_width_half;
+    double angle_offset = SENSOR_LEN_HALF * M_SQRT1_2;
+
     // Front sensor
     m_sensors.emplace_back(Vector2D{front_offset, 0}, 0, 1);
+
     // Right-Front sensor
     m_sensors.emplace_back(Vector2D{front_offset, m_position.m_height_half}, 0,
                            -1);
+
     // Right-Corner sensor
     m_sensors.emplace_back(Vector2D{angle_offset + m_position.m_width_half,
                                     angle_offset + m_position.m_height_half},
                            M_PI_4, -.5);
+
     // Left-Front Sensor
     m_sensors.emplace_back(Vector2D{front_offset, -m_position.m_height_half}, 0,
                            1);
+
     // Left-Corner sensor
     m_sensors.emplace_back(Vector2D{angle_offset + m_position.m_width_half,
                                     -(angle_offset + m_position.m_height_half)},

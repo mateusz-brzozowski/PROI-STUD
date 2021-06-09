@@ -61,17 +61,26 @@ class Car : public IMapObject {
 /**
  * AutonomousCar is an extension to the Car class,
  * that provides an autonomous car, which follows another Car.
+ *
+ * This car also implements IRenderAddon, which will render
+ * the sensors on any SDL_Renderer.
  */
 class AutonomousCar : public Car, public IRenderAddon {
    protected:
     // --- sub-classes --- ///
-    static constexpr int sensor_lenght_half = 18;
 
+    /// Half of the collision-detecting sensor length
+    static constexpr int SENSOR_LEN_HALF = 18;
+
+    /**
+     * Sensor is a helper class for collsion sensors
+     * of the AutonomousCar.
+     */
     struct Sensor {
-        Vector2D const center_offset;
-        double const angle_offset;
-        double const avoid_factor;
-        RotatedRect bbox{{0, 0}, sensor_lenght_half, 0.5};
+        Vector2D const center_offset;  // Offset from the car center
+        double const angle_offset;     // Angle offset, based on the car's angle
+        double const avoid_factor;     // Turning factor on a detection
+        RotatedRect bbox{{0, 0}, SENSOR_LEN_HALF, 0.5};
 
         Sensor(Vector2D co = {0, 0}, double ao = 0, double af = 0, int ofi = 0)
             : center_offset(co), angle_offset(ao), avoid_factor(af) {}
@@ -91,13 +100,25 @@ class AutonomousCar : public Car, public IRenderAddon {
     /// List of sensors
     std::vector<Sensor> m_sensors{};
 
-    /// Car is performing an avoidance manover
-    bool m_avoiding{false};
-
     // --- protected methods --- //
 
+    /**
+     * checks whether a particular sensor collides with anything.
+     *
+     * @returns the pointer to a colliding object's bbox; nullptr on no
+     * collision
+     */
     RotatedRect const* sensor_collides(Sensor const&) const;
+
+    /**
+     * moves all of the sensors to match AutonomousCar's position
+     */
     void update_sensor_pos();
+
+    /**
+     * Fills the m_sensors vector; needs to be called
+     * after the texture dimensions are known.
+     */
     void initialize_sensors();
 
    public:
