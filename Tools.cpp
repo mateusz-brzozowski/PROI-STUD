@@ -70,7 +70,7 @@ Vector2D project_points(std::vector<Vector2D> const& points,
 }
 
 bool intervals_overlap(Vector2D const& i1, Vector2D const& i2) {
-    return i1.x < i2.x ? i2.x < i1.y : i1.x < i2.y;
+    return i1.x <= i2.x ? i2.x <= i1.y : i1.x <= i2.y;
 }
 
 std::vector<Vector2D> RotatedRect::vertices() const {
