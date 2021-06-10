@@ -69,23 +69,88 @@ TEST(Car, update) {
     EXPECT_NEAR(c->get_bbox()->m_angle, M_PI, 1e-6);
 }
 
+// Expose internal functions from AutonomousCar
+
+class ExposedAutonomousCar : public AutonomousCar {
+   public:
+    using AutonomousCar::AutonomousCar;
+    RotatedRect const* sensor_collides(Sensor const& s) const {
+        return AutonomousCar::sensor_collides(s);
+    }
+
+    void update_sensor_pos() { AutonomousCar::update_sensor_pos(); }
+    void initialize_sensors() { AutonomousCar::initialize_sensors(); }
+    RotatedRect& get_modifiable_bbox() { return m_position; }
+};
+
 TEST(AutonomousCar, sensor_collides) {
-    GTEST_SKIP() << "AutonomousCar::sensor_collides is a TODO!";
-}
-
-TEST(AutonomousCar, update_sensor_pos) {
-    GTEST_SKIP() << "AutonomousCar::update_sensor_pos is a TODO!";
-}
-
-TEST(AutonomousCar, initialize_sensors) {
     MapNoGui m;
     m.init();
 
-    auto c = std::make_shared<AutonomousCar>(Vector2D{100, 100}, nullptr);
-    // m.add() calls c.set_map(), which should call c.initialize_sensors()
+    auto c = std::make_shared<ExposedAutonomousCar>(Vector2D{9, 9}, nullptr);
     m.add(c);
 
-    auto sensors = c->get_sensors();
+    auto o = std::make_shared<Bush>(Vector2D{36, 36});
+    m.add(o);
+
+    c->update_sensor_pos();
+
+    auto& sensors = c->get_sensors();
+
+    EXPECT_EQ(c->sensor_collides(sensors[0]), nullptr);
+    EXPECT_EQ(c->sensor_collides(sensors[1]), nullptr);
+    EXPECT_EQ(c->sensor_collides(sensors[2]), o->get_bbox());
+    EXPECT_EQ(c->sensor_collides(sensors[3]), nullptr);
+    EXPECT_EQ(c->sensor_collides(sensors[4]), nullptr);
+}
+
+TEST(AutonomousCar, update_sensor_pos) {
+    ExposedAutonomousCar c{Vector2D{100, 100}, nullptr};
+
+    auto& bbox = c.get_modifiable_bbox();
+    bbox.m_width_half = 9;
+    bbox.m_height_half = 9;
+    bbox.m_angle = M_PI_4;
+
+    c.initialize_sensors();
+    c.update_sensor_pos();
+    auto& sensors = c.get_sensors();
+
+    ASSERT_EQ(sensors.size(), 5);
+
+    // Front sensor
+    EXPECT_VECTOR_NEAR(sensors[0].bbox.m_center,
+                       (Vector2D{119.091883, 119.091883}));
+    EXPECT_NEAR(sensors[0].bbox.m_angle, M_PI_4, 1e-6);
+
+    // Right-Front sensor
+    EXPECT_VECTOR_NEAR(sensors[1].bbox.m_center,
+                       (Vector2D{112.727922, 125.455844}));
+    EXPECT_NEAR(sensors[1].bbox.m_angle, M_PI_4, 1e-6);
+
+    // Right-Corner sensor
+    EXPECT_VECTOR_NEAR(sensors[2].bbox.m_center, (Vector2D{100, 130.727922}));
+    EXPECT_NEAR(sensors[2].bbox.m_angle, M_PI_2, 1e-6);
+
+    // Left-Front sensor
+    EXPECT_VECTOR_NEAR(sensors[3].bbox.m_center,
+                       (Vector2D{125.455844, 112.727922}));
+    EXPECT_NEAR(sensors[3].bbox.m_angle, M_PI_4, 1e-6);
+
+    // Left-Corner sensor
+    EXPECT_VECTOR_NEAR(sensors[4].bbox.m_center, (Vector2D{130.727922, 100}));
+    EXPECT_NEAR(sensors[4].bbox.m_angle, 0, 1e-6);
+}
+
+TEST(AutonomousCar, initialize_sensors) {
+    ExposedAutonomousCar c{Vector2D{100, 100}, nullptr};
+
+    auto& bbox = c.get_modifiable_bbox();
+    bbox.m_width_half = 9;
+    bbox.m_height_half = 9;
+
+    c.initialize_sensors();
+    auto& sensors = c.get_sensors();
 
     ASSERT_EQ(sensors.size(), 5);
 
