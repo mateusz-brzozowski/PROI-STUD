@@ -89,6 +89,9 @@ void AutonomousCar::update_sensor_pos() {
 void AutonomousCar::update() {
     update_sensor_pos();
 
+    // Don't do anything without a target
+    if (!m_target) return;
+
     // Detect collisions
     double avoid_factor = 0;
 
