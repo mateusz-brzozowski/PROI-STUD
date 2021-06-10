@@ -111,6 +111,8 @@ class AutonomousCar : public Car, public IRenderAddon {
     /**
      * Fills the m_sensors vector; needs to be called
      * after the texture dimensions are known.
+     *
+     * Doesn't set the sensor's bounding boxes - just their parameters.
      */
     void initialize_sensors();
 
@@ -122,4 +124,5 @@ class AutonomousCar : public Car, public IRenderAddon {
     void set_map(IMap* map) override;
     void update() override;
     void render_on(SDL_Renderer*) override;
+    inline std::vector<Sensor> const& get_sensors() { return m_sensors; }
 };
