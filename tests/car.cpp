@@ -78,5 +78,41 @@ TEST(AutonomousCar, update_sensor_pos) {
 }
 
 TEST(AutonomousCar, initialize_sensors) {
-    GTEST_SKIP() << "AutonomousCar::initialize_sensors is a TODO!";
+    MapNoGui m;
+    m.init();
+
+    auto c = std::make_shared<AutonomousCar>(Vector2D{100, 100}, nullptr);
+    // m.add() calls c.set_map(), which should call c.initialize_sensors()
+    m.add(c);
+
+    auto sensors = c->get_sensors();
+
+    ASSERT_EQ(sensors.size(), 5);
+
+    // Front sensor
+    EXPECT_VECTOR_NEAR(sensors[0].center_offset, (Vector2D{27, 0}));
+    EXPECT_NEAR(sensors[0].angle_offset, 0, 1e-6);
+    EXPECT_NEAR(sensors[0].avoid_factor, 1, 1e-6);
+
+    // Right-Front sensor
+    EXPECT_VECTOR_NEAR(sensors[1].center_offset, (Vector2D{27, 9}));
+    EXPECT_NEAR(sensors[1].angle_offset, 0, 1e-6);
+    EXPECT_NEAR(sensors[1].avoid_factor, -1, 1e-6);
+
+    // Right-Corner sensor
+    EXPECT_VECTOR_NEAR(sensors[2].center_offset,
+                       (Vector2D{21.727922, 21.727922}));
+    EXPECT_NEAR(sensors[2].angle_offset, M_PI_4, 1e-6);
+    EXPECT_NEAR(sensors[2].avoid_factor, -.5, 1e-6);
+
+    // Left-Front sensor
+    EXPECT_VECTOR_NEAR(sensors[3].center_offset, (Vector2D{27, -9}));
+    EXPECT_NEAR(sensors[3].angle_offset, 0, 1e-6);
+    EXPECT_NEAR(sensors[3].avoid_factor, 1, 1e-6);
+
+    // Left-Corner sensor
+    EXPECT_VECTOR_NEAR(sensors[4].center_offset,
+                       (Vector2D{21.727922, -21.727922}));
+    EXPECT_NEAR(sensors[4].angle_offset, -M_PI_4, 1e-6);
+    EXPECT_NEAR(sensors[4].avoid_factor, .5, 1e-6);
 }
