@@ -68,3 +68,15 @@ TEST(Car, update) {
     for (int i = 10; i != 0; --i) m.update();
     EXPECT_NEAR(c->get_bbox()->m_angle, M_PI, 1e-6);
 }
+
+TEST(AutonomousCar, sensor_collides) {
+    GTEST_SKIP() << "AutonomousCar::sensor_collides is a TODO!";
+}
+
+TEST(AutonomousCar, update_sensor_pos) {
+    GTEST_SKIP() << "AutonomousCar::update_sensor_pos is a TODO!";
+}
+
+TEST(AutonomousCar, initialize_sensors) {
+    GTEST_SKIP() << "AutonomousCar::initialize_sensors is a TODO!";
+}

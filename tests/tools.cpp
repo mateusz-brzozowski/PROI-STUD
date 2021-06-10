@@ -141,7 +141,7 @@ TEST(Vector2D, distance) {
     EXPECT_NEAR(v1.distance(v2), 2 * M_SQRT2, 1e-6);
 }
 
-TEST(IntervalsOverlap, normal) {
+TEST(IntervalsOverlap, all_cases) {
     EXPECT_TRUE(intervals_overlap({1, 3}, {2, 4}));
     EXPECT_TRUE(intervals_overlap({2, 4}, {1, 3}));
     EXPECT_TRUE(intervals_overlap({-5, 5}, {-10, -2}));
@@ -197,7 +197,7 @@ TEST(RotatedRect, update_sdl_rect_position) {
     EXPECT_NEAR(sdl_rect.y, 0, 1e-6);
 }
 
-TEST(RotatedRect, project_points_) {
+TEST(ProjectPoints, all_cases) {
     auto points = RotatedRect({2, 2}, 1, 1).vertices();
     Vector2D axis1 = {1, 0};
     Vector2D interval1 = project_points(points, axis1);
