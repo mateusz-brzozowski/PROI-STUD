@@ -2,7 +2,6 @@
 
 Skład zespołu: Mateusz Brzozowski, Mikołaj Kuranowski, Jan Rusak
 
-
 # Budowanie projektu
 
 Projekt korzysta z systemu CMake.
